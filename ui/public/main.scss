@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css?family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Fredoka+One&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Prata&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Ultra&display=swap");
+
+$fontForTable: "Fredoka One", cursive;
+$fontForHeadings: "Pacifico", serif;
+$fontColorForHeadings: #5b8c5a;
+$fontColorForTable: #142850;
+
+#contents {
+  h1 {
+    font-family: $fontForHeadings;
+    color: $fontColorForHeadings;
+    letter-spacing: 2px;
+  }
+  h3 {
+    font-family: $fontForHeadings;
+    color: $fontColorForHeadings;
+  }
+  table {
+    border-collapse: collapse;
+
+    border-radius: 10px;
+    text-align: center;
+  }
+  td,
+  th {
+    font-family: $fontForTable;
+    color: $fontColorForTable;
+    padding: 10px;
+    border: 1px solid #333333;
+  }
+  hr {
+    border-radius: 10px;
+    border-top-width: 0;
+    border-bottom-color: #c02739;
+  }
+}
