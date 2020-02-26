@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 db.issues.remove({});
 const issuesDB = [
   {
@@ -20,6 +21,8 @@ const issuesDB = [
   }
 ];
 db.issues.insertMany(issuesDB);
+=======
+>>>>>>> problem fixed
 const count = db.issues.count();
 print("Inserted", count, "issues");
 db.counters.remove({ _id: "issues" });
