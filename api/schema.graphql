@@ -11,12 +11,17 @@ type Issue {
   _id: ID!
   id: Int!
   title: String!
-  status: StatusType!
-  owner: String
+  status: StatusType
+  owner: String!
   effort: Int
-  created: GraphQLDate!
-  due: GraphQLDate!
+  created: GraphQLDate
+  due: GraphQLDate
 }
+
+input Deletions {
+  id: Int!
+}
+
 "Toned down Issue, used as inputs, without server generated values."
 input IssueInputs {
   title: String!
@@ -37,4 +42,5 @@ type Mutation {
   setAboutMessage(message: String!): String!
   setNewName(name: String!): String!
   issueAdd(issue: IssueInputs!): Issue!
+  issueDelete(id: Int!): Int!
 }

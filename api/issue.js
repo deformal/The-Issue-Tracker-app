@@ -32,4 +32,11 @@ async function add(_, { issue }) {
   return savedIssue;
 }
 
-module.exports = { list, add };
+async function del(_, { id }) {
+  const db = getDB();
+  const result = await db.collection("issues").deleteOne({ id: id });
+  return result.data.title;
+  console.log("deleted");
+}
+
+module.exports = { list, add, del };

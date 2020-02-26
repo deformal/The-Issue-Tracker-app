@@ -13,7 +13,8 @@ const resolvers = {
   },
   Mutation: {
     setAboutMessage: about.setMessage,
-    issueAdd: issues.add
+    issueAdd: issues.add,
+    issueDelete: issues.del
   },
   GraphQLDate
 };
