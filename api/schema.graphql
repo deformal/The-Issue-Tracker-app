@@ -35,12 +35,11 @@ input IssueInputs {
 type Query {
   about: String!
   name: String!
-  List: [Issue!]!
+  List(status: StatusType): [Issue!]!
 }
 
 type Mutation {
   setAboutMessage(message: String!): String!
   setNewName(name: String!): String!
   issueAdd(issue: IssueInputs!): Issue!
-  issueDelete(id: Int!): Int!
 }

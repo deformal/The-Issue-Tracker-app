@@ -31,9 +31,11 @@
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "require": "^2.4.20",
     "uglify-js": "^3.8.0",
+    "url-search-params": "^1.1.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {

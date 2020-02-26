@@ -1,11 +1,13 @@
 const { UserInputError } = require("apollo-server-express");
 const { getDB, getNextSequence } = require("./db.js");
 
-async function list() {
+async function list(_, { status }) {
   const db = getDB();
+  const filter = {};
+  if (status) filter.status = status;
   const issues = await db
     .collection("issues")
-    .find({})
+    .find(filter)
     .toArray();
   return issues;
 }
@@ -32,11 +34,4 @@ async function add(_, { issue }) {
   return savedIssue;
 }
 
-async function del(_, { id }) {
-  const db = getDB();
-  const result = await db.collection("issues").deleteOne({ id: id });
-  return result.data.title;
-  console.log("deleted");
-}
-
-module.exports = { list, add, del };
+module.exports = { list, add };

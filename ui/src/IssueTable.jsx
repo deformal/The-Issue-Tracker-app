@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 function IssueTable(props) {
   //local variables
   const issueRows = props.issues.map(issue => (
@@ -17,6 +18,7 @@ function IssueTable(props) {
             <th> Effort</th>
             <th>Due Date</th>
             <th> Title</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>{issueRows}</tbody>
@@ -35,6 +37,9 @@ function IssueRow(props) {
       <td>{props.ix.effort}</td>
       <td>{props.ix.due ? props.ix.due.toDateString() : ""}</td>
       <td>{props.ix.title}</td>
+      <td>
+        <Link to={`/edit/${props.ix.id}`}>Edit</Link>
+      </td>
     </tr>
   );
 }
