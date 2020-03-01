@@ -3,20 +3,22 @@
 @import url("https://fonts.googleapis.com/css?family=Fredoka+One&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Prata&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Ultra&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Spartan&display=swap");
 
 $fontForTable: "Fredoka One", cursive;
+$secondFontHeading: "Spartan";
 $fontForHeadings: "Pacifico", serif;
-$fontColorForHeadings: #5b8c5a;
+$fontColorForHeadings: blue;
 $fontColorForTable: #142850;
 
 #contents {
   h1 {
-    font-family: $fontForHeadings;
+    font-family: $secondFontHeading;
     color: $fontColorForHeadings;
     letter-spacing: 2px;
   }
   h3 {
-    font-family: $fontForHeadings;
+    font-family: $secondFontHeading;
     color: $fontColorForHeadings;
   }
   table {
@@ -36,5 +38,14 @@ $fontColorForTable: #142850;
     border-radius: 10px;
     border-top-width: 0;
     border-bottom-color: #c02739;
+  }
+  pre {
+    font-family: $fontForTable;
+  }
+  .selection {
+    font-family: $secondFontHeading;
+  }
+  .navbar {
+    font-family: $fontForTable;
   }
 }

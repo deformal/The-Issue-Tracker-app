@@ -16,6 +16,7 @@ type Issue {
   effort: Int
   created: GraphQLDate
   due: GraphQLDate
+  description: String!
 }
 
 input Deletions {
@@ -30,12 +31,14 @@ input IssueInputs {
   owner: String
   effort: Int = 0
   due: GraphQLDate
+  description: String!
 }
 ###top level declerations
 type Query {
   about: String!
   name: String!
   List(status: StatusType): [Issue!]!
+  issue(id: Int!): Issue!
 }
 
 type Mutation {

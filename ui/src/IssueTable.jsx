@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, withRouter } from "react-router-dom";
 function IssueTable(props) {
   //local variables
   const issueRows = props.issues.map(issue => (
@@ -27,20 +27,23 @@ function IssueTable(props) {
   );
 }
 
-function IssueRow(props) {
+const IssueRow = withRouter(({ ix, location: { search } }) => {
+  const selectLocation = { pathname: `/issues/${ix.id}`, search };
   return (
     <tr>
-      <td>{props.ix.id}</td>
-      <td>{props.ix.status}</td>
-      <td>{props.ix.owner}</td>
-      <td>{props.ix.created.toDateString()}</td>
-      <td>{props.ix.effort}</td>
-      <td>{props.ix.due ? props.ix.due.toDateString() : ""}</td>
-      <td>{props.ix.title}</td>
+      <td>{ix.id}</td>
+      <td>{ix.status}</td>
+      <td>{ix.owner}</td>
+      <td>{ix.created.toDateString()}</td>
+      <td>{ix.effort}</td>
+      <td>{ix.due ? ix.due.toDateString() : ""}</td>
+      <td>{ix.title}</td>
       <td>
-        <Link to={`/edit/${props.ix.id}`}>Edit</Link>
+        <Link to={`/edit/${ix.id}`}>Edit</Link>
+        {"|"}
+        <NavLink to={selectLocation}>Select</NavLink>
       </td>
     </tr>
   );
-}
+});
 export default IssueTable;

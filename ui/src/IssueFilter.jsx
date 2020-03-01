@@ -1,11 +1,11 @@
 import React from "react";
-//import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 
 class IssueFilter extends React.Component {
   constructor() {
     super();
-    this.onChangeStatus = this.onChangeStatus.bind("this");
+    this.onChangeStatus = this.onChangeStatus.bind(this);
   }
   onChangeStatus(e) {
     const status = e.target.value;
@@ -17,7 +17,7 @@ class IssueFilter extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div className="selection">
         Status:{" "}
         <select onChange={this.onChangeStatus}>
           <option value="">(All)</option>

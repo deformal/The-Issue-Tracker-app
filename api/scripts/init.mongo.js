@@ -7,7 +7,9 @@ const issuesDB = [
     effort: "5",
     created: new Date("2020-02-12"),
     due: new Date("2020-03-12"),
-    title: "Error in console when clicking ADD"
+    title: "Error in console when clicking ADD",
+    description:
+      "When the add button is clicked there is an error in the console which shows that there is no function attached to it. Why? this is just not normal as there is a function that is assigned to the button"
   },
   {
     id: 2,
@@ -16,7 +18,9 @@ const issuesDB = [
     effort: "2",
     created: new Date("2020-02-18"),
     due: new Date("2020-03-20"),
-    title: "Missing bottom border on the panel"
+    title: "Missing bottom border on the panel",
+    description:
+      "The bottom border of the ui panel is missing and there is no way to see the status of the current active file"
   }
 ];
 db.issues.insertMany(issuesDB);

@@ -3,15 +3,16 @@
 @import url("https://fonts.googleapis.com/css?family=Fredoka+One&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Prata&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Ultra&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Spartan&display=swap");
 #contents h1 {
-  font-family: "Pacifico", serif;
-  color: #5b8c5a;
+  font-family: "Spartan";
+  color: blue;
   letter-spacing: 2px;
 }
 
 #contents h3 {
-  font-family: "Pacifico", serif;
-  color: #5b8c5a;
+  font-family: "Spartan";
+  color: blue;
 }
 
 #contents table {
@@ -32,5 +33,17 @@
   border-radius: 10px;
   border-top-width: 0;
   border-bottom-color: #c02739;
+}
+
+#contents pre {
+  font-family: "Fredoka One", cursive;
+}
+
+#contents .selection {
+  font-family: "Spartan";
+}
+
+#contents .navbar {
+  font-family: "Fredoka One", cursive;
 }
 /*# sourceMappingURL=main.css.map */
