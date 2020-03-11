@@ -1,7 +1,6 @@
 const fs = require("fs");
 require("dotenv").config();
 const { ApolloServer } = require("apollo-server-express");
-
 const GraphQLDate = require("./graphql_datemodule.js");
 const about = require("./about.js");
 const issues = require("./issue.js");
@@ -14,7 +13,8 @@ const resolvers = {
   },
   Mutation: {
     setAboutMessage: about.setMessage,
-    issueAdd: issues.add
+    issueAdd: issues.add,
+    issueDelete: issues.del
   },
   GraphQLDate
 };

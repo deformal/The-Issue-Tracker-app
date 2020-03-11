@@ -3,7 +3,7 @@ import "babel-polyfill";
 import React from "react";
 import ReactDOM from "react-dom";
 import Page from "./Page.jsx";
-import { HashRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const element = (
   <Router>
@@ -11,7 +11,8 @@ const element = (
   </Router>
 );
 
-ReactDOM.render(element, document.getElementById("contents")); //renders the element passed to it as an argument on the web browser
+ReactDOM.render(element, document.getElementById("contents"));
+
 
 if (module.hot) {
   module.hot.accept();

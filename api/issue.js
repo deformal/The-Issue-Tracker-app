@@ -1,5 +1,5 @@
 const { UserInputError } = require("apollo-server-express");
-const { getDB, getNextSequence } = require("./db.js");
+const { getDB, getNextSequence, getPrevSequence } = require("./db.js");
 
 async function get(_, { id }) {
   const db = getDB();
@@ -39,5 +39,13 @@ async function add(_, { issue }) {
     .findOne({ _id: result.insertedId });
   return savedIssue;
 }
+async function del(_, { id }) {
+  const db = getDB();
+  const result = await db.collection("issues").deleteOne({ id });
+  console.log("deleted");
+  await getPrevSequence("issues");
+  const remaining = await db.collection("issues").find({});
+  return remaining;
+}
 
-module.exports = { list, add, get };
+module.exports = { list, add, get, del };

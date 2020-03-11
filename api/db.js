@@ -26,8 +26,18 @@ async function getNextSequence(name) {
     );
   return result.value.current;
 }
+async function getPrevSequence(name) {
+  const result = await db
+    .collection("counters")
+    .updateOne(
+      { _id: name },
+      { $inc: { current: -1 } },
+      { returnOriginal: false }
+    );
+  console.log("deleted");
+}
 
 function getDB() {
   return db;
 }
-module.exports = { connectingDB, getNextSequence, getDB };
+module.exports = { connectingDB, getNextSequence, getDB, getPrevSequence };

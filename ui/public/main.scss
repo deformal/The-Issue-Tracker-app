@@ -48,4 +48,19 @@ $fontColorForTable: #142850;
   .navbar {
     font-family: $fontForTable;
   }
+  .formarea {
+    input {
+      border-radius: 5px;
+      border-width: 1px;
+    }
+    input:nth-child(2) {
+      margin-left: 20px;
+    }
+    button {
+      margin-left: 20px;
+    }
+    textarea {
+      border-radius: 5px;
+    }
+  }
 }

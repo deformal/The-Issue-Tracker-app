@@ -1,10 +1,12 @@
+const webpack = require("webpack");
 const path = require("path");
 module.exports = {
   mode: "development",
   entry: { app: ["./src/app.jsx"] },
   output: {
     filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "public")
+    path: path.resolve(__dirname, "public"),
+    publicPath: "/"
   },
   module: {
     rules: [
@@ -15,11 +17,13 @@ module.exports = {
       }
     ]
   },
+
   optimization: {
     splitChunks: {
       name: "vendor",
       chunks: "all"
     }
   },
+
   devtool: "source-map"
 };

@@ -35,7 +35,7 @@ export default class IssueDetail extends React.Component {
               id description
           }
       }`;
-    const x = Number(id); //it finaly worked awsome
+    const x = Number(id); //it finaly worked awesome
     const data = await graphQLFetch(query, { id: x });
     if (data) {
       this.setState({ issue: data.issue });

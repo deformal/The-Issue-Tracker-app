@@ -46,4 +46,21 @@
 #contents .navbar {
   font-family: "Fredoka One", cursive;
 }
+
+#contents .formarea input {
+  border-radius: 5px;
+  border-width: 1px;
+}
+
+#contents .formarea input:nth-child(2) {
+  margin-left: 20px;
+}
+
+#contents .formarea button {
+  margin-left: 20px;
+}
+
+#contents .formarea textarea {
+  border-radius: 5px;
+}
 /*# sourceMappingURL=main.css.map */

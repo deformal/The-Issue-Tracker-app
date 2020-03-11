@@ -45,4 +45,5 @@ type Mutation {
   setAboutMessage(message: String!): String!
   setNewName(name: String!): String!
   issueAdd(issue: IssueInputs!): Issue!
+  issueDelete(id: Int!): Issue!
 }
