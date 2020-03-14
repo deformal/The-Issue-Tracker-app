@@ -6,7 +6,8 @@ import IssueReport from "./IssueReport.jsx";
 import graphQLFetch from "./graphQLFetch.js";
 import IssueDetail from "./IssueDetail.jsx";
 import URLSearchParams from "url-search-params"; //the url search parameter are installed in here and are passed to other components
-import { Route } from "react-router-dom";
+import { Route, BrowserRouter } from "react-router-dom";
+import { number } from "prop-types";
 
 export default class IssueList extends React.Component {
   constructor() {
@@ -41,8 +42,20 @@ export default class IssueList extends React.Component {
       const params = new URLSearchParams(search);
       const vars = {};
       if (params.get("status")) vars.status = params.get("status");
-      const query = `query List($status:StatusType){
-      List(status:$status){
+      const effortMin = parseInt(params.get('effortMin', 10));
+      if (!Number.isNaN(effortMin)) vars.effortMin = effortMin;
+      const effortMax = parseInt(params.get('effortMax'), 10);
+      if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
+      const query = `query List(
+        $status:StatusType
+        $effortMin:Int
+        $effortMax:Int
+        ){
+      List(
+        status:$status
+        effortMin:$effortMin
+        effortMax:$effortMax
+        ){
         id title status owner created effort due
       }
     }`;

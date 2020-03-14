@@ -5,10 +5,18 @@ function IssueTable(props) {
   const issueRows = props.issues.map(issue => (
     <IssueRow key={issue.id} ix={issue} />
   ));
+  const Tablecollapse = {
+    borderCollapse: "collapse",
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "black",
+    textAlign: "center",
+    padding: 10
+  };
 
   return (
     <React.Fragment>
-      <table>
+      <table style={Tablecollapse}>
         <thead>
           <tr>
             <th> ID</th>

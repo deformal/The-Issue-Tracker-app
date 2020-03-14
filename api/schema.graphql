@@ -37,7 +37,11 @@ input IssueInputs {
 type Query {
   about: String!
   name: String!
-  List(status: StatusType): [Issue!]!
+  List(
+    status:StatusType
+    effortMin:Int
+    effortMax:Int
+  ):[Issue!]!
   issue(id: Int!): Issue!
 }
 
