@@ -23,6 +23,7 @@ export default class IssueDetail extends React.Component {
     if (prevId !== id) {
       this.loadData();
     }
+    console.log(this.props.match);
   }
   async loadData() {
     const {

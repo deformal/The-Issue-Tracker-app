@@ -2,8 +2,13 @@ import React from "react";
 import { Link, NavLink, withRouter } from "react-router-dom";
 function IssueTable(props) {
   //local variables
-  const issueRows = props.issues.map(issue => (
-    <IssueRow key={issue.id} ix={issue} />
+  const issueRows = props.issues.map((issue, index) => (
+    <IssueRow
+      key={issue.id}
+      ix={issue}
+      closeIssue={props.closeIssue}
+      index={index}
+    />
   ));
   const Tablecollapse = {
     borderCollapse: "collapse",
@@ -35,23 +40,34 @@ function IssueTable(props) {
   );
 }
 
-const IssueRow = withRouter(({ ix, location: { search } }) => {
-  const selectLocation = { pathname: `/issues/${ix.id}`, search };
-  return (
-    <tr>
-      <td>{ix.id}</td>
-      <td>{ix.status}</td>
-      <td>{ix.owner}</td>
-      <td>{ix.created.toDateString()}</td>
-      <td>{ix.effort}</td>
-      <td>{ix.due ? ix.due.toDateString() : ""}</td>
-      <td>{ix.title}</td>
-      <td>
-        <Link to={`/edit/${ix.id}`}>Edit</Link>
-        {"|"}
-        <NavLink to={selectLocation}>Select</NavLink>
-      </td>
-    </tr>
-  );
-});
+const IssueRow = withRouter(
+  ({ ix, location: { search }, closeIssue, index }) => {
+    const selectLocation = { pathname: `/issues/${ix.id}`, search };
+    return (
+      <tr>
+        <td>{ix.id}</td>
+        <td>{ix.status}</td>
+        <td>{ix.owner}</td>
+        <td>{ix.created.toDateString()}</td>
+        <td>{ix.effort}</td>
+        <td>{ix.due ? ix.due.toDateString() : ""}</td>
+        <td>{ix.title}</td>
+        <td>
+          <Link to={`/edit/${ix.id}`}>Edit</Link>
+          {"|"}
+          <NavLink to={selectLocation}>Select</NavLink>
+          {"|"}
+          <button
+            type="button"
+            onClick={() => {
+              closeIssue(index);
+            }}
+          >
+            Close
+          </button>
+        </td>
+      </tr>
+    );
+  }
+);
 export default IssueTable;

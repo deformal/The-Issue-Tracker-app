@@ -33,15 +33,21 @@ input IssueInputs {
   due: GraphQLDate
   description: String!
 }
+
+input IssueUpdateInputs {
+  title: String
+  status: StatusType
+  owner: String
+  effort: Int
+  due: GraphQLDate
+  description: String
+}
+
 ###top level declerations
 type Query {
   about: String!
   name: String!
-  List(
-    status:StatusType
-    effortMin:Int
-    effortMax:Int
-  ):[Issue!]!
+  List(status: StatusType, effortMin: Int, effortMax: Int): [Issue!]!
   issue(id: Int!): Issue!
 }
 
@@ -49,5 +55,6 @@ type Mutation {
   setAboutMessage(message: String!): String!
   setNewName(name: String!): String!
   issueAdd(issue: IssueInputs!): Issue!
-  issueDelete(id: Int!): Issue!
+  issueUpdate(id: Int!, changes: IssueUpdateInputs!): Issue!
+  issueDelete(id: Int!): Boolean!
 }

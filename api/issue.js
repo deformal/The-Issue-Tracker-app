@@ -14,7 +14,7 @@ async function list(_, { status, effortMin, effortMax }) {
   if (effortMin !== undefined || effortMax !== undefined) {
     filter.effort = {};
     if (effortMin !== undefined) filter.effort.$gte = effortMin;
-    if (effortMax !== undefined) filter.effort.$lte = effortMax
+    if (effortMax !== undefined) filter.effort.$lte = effortMax;
   }
   const issues = await db
     .collection("issues")
@@ -44,13 +44,30 @@ async function add(_, { issue }) {
     .findOne({ _id: result.insertedId });
   return savedIssue;
 }
-async function del(_, { id }) {
+
+async function update(_, { id, changes }) {
   const db = getDB();
-  const result = await db.collection("issues").deleteOne({ id });
-  console.log("deleted");
-  await getPrevSequence("issues");
-  const remaining = await db.collection("issues").find({});
-  return remaining;
+  if (changes.title || changes.status || changes.owner) {
+    const issue = await db.collection("issues").findOne({ id });
+    Object.assign(issue, changes);
+    Validate(issue);
+  }
+  await db.collection("issues").updateOne({ id }, { $set: changes });
+  const savedIssue = await db.collection("issues").findOne({ id });
+  return savedIssue;
 }
 
-module.exports = { list, add, get, del };
+async function remove(_, { id }) {
+  const db = getDB();
+  const issue = await db.collection("issue").findOne({ id });
+  if (!issue) return false;
+  issue.deleted = new Date();
+  let result = await db.collection("deleted_issues").insertOne(issue);
+  if (result.insertedId) {
+    result = await db.collection("issues").removeOne({ id });
+    return result.deletedCount === 1;
+  }
+  return false;
+}
+
+module.exports = { list, add, get, update, delete: remove };

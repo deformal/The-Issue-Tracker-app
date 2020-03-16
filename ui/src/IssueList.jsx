@@ -7,13 +7,13 @@ import graphQLFetch from "./graphQLFetch.js";
 import IssueDetail from "./IssueDetail.jsx";
 import URLSearchParams from "url-search-params"; //the url search parameter are installed in here and are passed to other components
 import { Route, BrowserRouter } from "react-router-dom";
-import { number } from "prop-types";
 
 export default class IssueList extends React.Component {
   constructor() {
     super();
     this.state = { issues: [] };
     this.createIssue = this.createIssue.bind(this);
+    this.closeIssue = this.closeIssue.bind(this);
   }
 
   componentDidMount() {
@@ -42,9 +42,9 @@ export default class IssueList extends React.Component {
       const params = new URLSearchParams(search);
       const vars = {};
       if (params.get("status")) vars.status = params.get("status");
-      const effortMin = parseInt(params.get('effortMin', 10));
+      const effortMin = parseInt(params.get("effortMin", 10));
       if (!Number.isNaN(effortMin)) vars.effortMin = effortMin;
-      const effortMax = parseInt(params.get('effortMax'), 10);
+      const effortMax = parseInt(params.get("effortMax"), 10);
       if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
       const query = `query List(
         $status:StatusType
@@ -85,6 +85,25 @@ export default class IssueList extends React.Component {
     }
   }
 
+  async closeIssue(index) {
+    const query = `mutation issueClose($id:Int!){
+    issueUpdate(id:$id,changes:{status:Closed}){
+      id title status owner effort created due description
+    }
+  }`;
+    const { issues } = this.state;
+    const data = await graphQLFetch(query, { id: issues[index].id });
+    if (data) {
+      this.setState(prevState => {
+        const newList = [...prevState.issues];
+        newList[index] = data.issueUpdate;
+        return { issues: newList };
+      });
+    } else {
+      this.loadData();
+    }
+  }
+
   render() {
     const { match } = this.props;
     return (
@@ -92,7 +111,11 @@ export default class IssueList extends React.Component {
         <h1>Issue Traker App</h1>
         <IssueFilter />
         <hr />
-        <IssueTable issues={this.state.issues} stat={this.state.Status} />
+        <IssueTable
+          issues={this.state.issues}
+          closeIssue={this.closeIssue}
+          stat={this.state.Status}
+        />
         {/*the whole state is passed here*/}
         <hr />
         <IssueAdd createIssue={this.createIssue} />
