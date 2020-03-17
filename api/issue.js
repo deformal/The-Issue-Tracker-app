@@ -57,17 +57,40 @@ async function update(_, { id, changes }) {
   return savedIssue;
 }
 
-async function remove(_, { id }) {
+async function removing(_, { id }) {
   const db = getDB();
-  const issue = await db.collection("issue").findOne({ id });
-  if (!issue) return false;
+  const issue = await db.collection("issues").findOne({ id });
+  if (!issue) return false; //not found
   issue.deleted = new Date();
-  let result = await db.collection("deleted_issues").insertOne(issue);
-  if (result.insertedId) {
-    result = await db.collection("issues").removeOne({ id });
-    return result.deletedCount === 1;
+
+  let deleteTabledata = db.collection("deleted_issues").findOne({ id });
+  if (deleteTabledata) {
+    let found = await db.collection("deleted_issues").deleteOne({ id }, issue);
+    let result = await db.collection("deleted_issues").insertOne(issue);
+    if (result.insertedId) {
+      result = await db.collection("issues").deleteOne({ id });
+
+      const newCount = await db.collection("issues").count();
+      const cntr = await db
+        .collection("counters")
+        .updateOne({ _id: "issues" }, { $set: { current: newCount } });
+      11;
+      return result.deletedCount === 1;
+    }
+  } else {
+    let result = await db.collection("deleted_issues").insertOne(issue);
+
+    if (result.insertedId) {
+      result = await db.collection("issues").deleteOne({ id });
+
+      const newCount = await db.collection("issues").count();
+      const cntr = await db
+        .collection("counters")
+        .updateOne({ _id: "issues" }, { $set: { current: newCount } });
+      return result.deletedCount === 1;
+    }
   }
   return false;
 }
 
-module.exports = { list, add, get, update, delete: remove };
+module.exports = { list, add, get, update, removing };

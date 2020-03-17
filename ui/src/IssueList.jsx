@@ -7,13 +7,14 @@ import graphQLFetch from "./graphQLFetch.js";
 import IssueDetail from "./IssueDetail.jsx";
 import URLSearchParams from "url-search-params"; //the url search parameter are installed in here and are passed to other components
 import { Route, BrowserRouter } from "react-router-dom";
-
+import { Panel } from "react-bootstrap";
 export default class IssueList extends React.Component {
   constructor() {
     super();
     this.state = { issues: [] };
     this.createIssue = this.createIssue.bind(this);
     this.closeIssue = this.closeIssue.bind(this);
+    this.deleteIssue = this.deleteIssue.bind(this);
   }
 
   componentDidMount() {
@@ -104,25 +105,60 @@ export default class IssueList extends React.Component {
     }
   }
 
+  async deleteIssue(index) {
+    const query = `mutation issueDelete($id:Int!){
+    issueDelete(id:$id)
+  }`;
+    const { issues } = this.state;
+    const {
+      location: { pathname, search },
+      history
+    } = this.props;
+    const { id } = issues[index];
+    const data = await graphQLFetch(query, { id });
+    if (data && data.issueDelete) {
+      this.setState(prevState => {
+        const newList = [...prevState.issues];
+        if (pathname === `/issues/${id}`) {
+          history.push({ pathname: "/issues", search });
+        }
+        newList.splice(index, 1);
+        return { issues: newList };
+      });
+    } else {
+      this.loadData();
+    }
+  }
+
   render() {
     const { match } = this.props;
+    const style = {
+      margin: 30
+    };
     return (
-      <React.Fragment>
-        <h1>Issue Traker App</h1>
-        <IssueFilter />
+      <div id="all">
+        <Panel>
+          <Panel.Heading>
+            <Panel.Title toggle>Filter</Panel.Title>
+          </Panel.Heading>
+          <Panel.Body collapsible>
+            <IssueFilter />
+          </Panel.Body>
+        </Panel>
+
         <hr />
         <IssueTable
           issues={this.state.issues}
           closeIssue={this.closeIssue}
           stat={this.state.Status}
+          deleteIssue={this.deleteIssue}
         />
-        {/*the whole state is passed here*/}
         <hr />
         <IssueAdd createIssue={this.createIssue} />
         <hr />
         <Route path={`${match.path}/:id`} component={IssueDetail} />
         <IssueReport />
-      </React.Fragment>
+      </div>
     );
   }
 }

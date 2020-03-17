@@ -16,7 +16,7 @@ type Issue {
   effort: Int
   created: GraphQLDate
   due: GraphQLDate
-  description: String!
+  description: String
 }
 
 input Deletions {
@@ -28,10 +28,10 @@ input IssueInputs {
   title: String!
   "Optional, if not supplied, will be set to 'New'"
   status: StatusType = New
-  owner: String
+  owner: String!
   effort: Int = 0
   due: GraphQLDate
-  description: String!
+  description: String
 }
 
 input IssueUpdateInputs {

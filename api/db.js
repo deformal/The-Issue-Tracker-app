@@ -4,17 +4,13 @@ let db;
 const url = process.env.DB_URL;
 
 async function connectingDB() {
-  try {
-    const client = new MongoClient(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-    await client.connect();
-    console.log("Connected to the db");
-    db = client.db();
-  } catch (err) {
-    console.log(err);
-  }
+  const client = new MongoClient(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+  await client.connect();
+  console.log("Connected to the db");
+  db = client.db();
 }
 async function getNextSequence(name) {
   const result = await db

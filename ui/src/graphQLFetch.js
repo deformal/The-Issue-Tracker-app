@@ -22,14 +22,12 @@ async function graphQLFetch(query, variables = {}) {
       const error = result.errors[0];
       if (error.extensions.code == "BAD_USER_INPUT") {
         const details = error.extensions.exceptions.errors.join("\n");
-        alert(`${error.message}:\n ${details}`);
       } else {
-        alert(`${error.extensions.code}:${error.message}`);
       }
     }
     return result.data;
   } catch (e) {
-    alert(`error in sending data to server :${e.message}`);
+    alert(`Error form the server :${e.message}`);
   }
 }
 export default graphQLFetch;
