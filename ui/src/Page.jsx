@@ -12,6 +12,7 @@ import {
   OverlayTrigger,
   Grid
 } from "react-bootstrap";
+import IssueAddNavItem from "./IssueAddNavItem.jsx";
 import NavbarHeader from "react-bootstrap/lib/NavbarHeader";
 
 function Header() {
@@ -34,21 +35,15 @@ function Header() {
           </LinkContainer>
         </Nav>
         <Nav pullRight>
-          <NavItem>
-            <OverlayTrigger
-              placement="left"
-              delayShow={200}
-              overlay={<Tooltip id="create-issue">Create Issue</Tooltip>}
-            >
-              <Glyphicon glyph="plus" />
-            </OverlayTrigger>
-          </NavItem>
+          <IssueAddNavItem />
           <NavDropdown
             id="user-dropdown"
             title={<Glyphicon glyph="option-vertical" />}
             noCaret
           >
-            <MenuItem>About</MenuItem>
+            <LinkContainer to="/about">
+              <MenuItem>About</MenuItem>
+            </LinkContainer>
           </NavDropdown>
         </Nav>
       </Navbar.Collapse>
@@ -58,6 +53,7 @@ function Header() {
 function Footer() {
   return (
     <small>
+      <hr />
       <p className="text-center">
         Full source code availabe at{"   "}
         <a href="https://github.com/deformal/The-Issue-Tracker-app">

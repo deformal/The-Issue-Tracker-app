@@ -4,7 +4,7 @@ function jsonDateReviver(key, value) {
   return value;
 }
 
-async function graphQLFetch(query, variables = {}) {
+async function graphQLFetch(query, variables = {}, showError = null) {
   try {
     const response = await fetch(window.ENV.UI_API_ENDPOINT, {
       method: "POST",
@@ -21,13 +21,17 @@ async function graphQLFetch(query, variables = {}) {
     if (result.errors) {
       const error = result.errors[0];
       if (error.extensions.code == "BAD_USER_INPUT") {
-        const details = error.extensions.exceptions.errors.join("\n");
+        const details = error.extensions.exception.errors.join("\n");
+        if (showError) showError(`${error.message}:\n${details}`);
+      } else if (showError) {
+        showError(`${error.extensions.code}:${error.message}`);
       } else {
+        alert(`this is the error ${error.message}`);
       }
     }
     return result.data;
   } catch (e) {
-    alert(`Error form the server :${e.message}`);
+    if (showError) showError(`Error in sending data to server:${e.message}`);
   }
 }
 export default graphQLFetch;

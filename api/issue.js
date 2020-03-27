@@ -23,11 +23,11 @@ async function list(_, { status, effortMin, effortMax }) {
   return issues;
 }
 
-function Validate(data) {
+function Validate(issue) {
   const errors = [];
-  if (data.title.length < 3)
+  if (issue.title.length < 3)
     errors.push('Field "title" must be at least 3 characters long.');
-  if (data.status == "Assigned" && !data.owner)
+  if (issue.status == "Assigned" && !issue.owner)
     errors.push('Field "owner" is required when status is "Assigned" ');
   if (errors.length > 0)
     throw new UserInputError("Invalid inputs form the user", { errors });

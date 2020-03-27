@@ -1,14 +1,18 @@
 import React from "react";
+
 function displayFormat(date) {
   return date != null ? date.toDateString() : "";
 }
+
 function editFormat(date) {
   return date != null ? date.toISOString().substr(0, 10) : "";
 }
+
 function unformat(str) {
   const val = new Date(str);
   return Number.isNaN(val.getTime()) ? null : val;
 }
+
 export default class DateInput extends React.Component {
   constructor(props) {
     super(props);
@@ -18,20 +22,21 @@ export default class DateInput extends React.Component {
       valid: true
     };
     this.onFocus = this.onFocus.bind(this);
-    this.OnBlur = this.OnBlur.bind(this);
+    this.onBlur = this.onBlur.bind(this);
     this.onChange = this.onChange.bind(this);
   }
 
   onFocus() {
     this.setState({ focused: true });
   }
-  OnBlur(e) {
+
+  onBlur(e) {
     const { value, valid: oldValid } = this.state;
     const { onValidityChange, onChange } = this.props;
     const dateValue = unformat(value);
     const valid = value === "" || dateValue != null;
     if (valid !== oldValid && onValidityChange) {
-      onValidityChnage(e, valid);
+      onValidityChange(e, valid);
     }
     this.setState({ focused: false, valid });
     if (valid) onChange(e, dateValue);
@@ -53,7 +58,7 @@ export default class DateInput extends React.Component {
         value={displayValue}
         placeholder={focused ? "yyyy-mm-dd" : null}
         onFocus={this.onFocus}
-        onBlur={this.OnBlur}
+        onBlur={this.onBlur}
         onChange={this.onChange}
       />
     );

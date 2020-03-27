@@ -11,11 +11,11 @@ type Issue {
   _id: ID!
   id: Int!
   title: String!
-  status: StatusType
-  owner: String!
+  status: StatusType!
+  owner: String
   effort: Int
-  created: GraphQLDate
-  due: GraphQLDate
+  created: GraphQLDate!
+  due: GraphQLDate!
   description: String
 }
 
@@ -28,7 +28,7 @@ input IssueInputs {
   title: String!
   "Optional, if not supplied, will be set to 'New'"
   status: StatusType = New
-  owner: String!
+  owner: String = "unknown"
   effort: Int = 0
   due: GraphQLDate
   description: String

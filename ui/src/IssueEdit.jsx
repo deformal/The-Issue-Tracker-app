@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import NumInput from "./NumInput.jsx";
 import DateInput from "./DateInput.jsx";
 import TextInput from "./TextInput.jsx";
+import Toast from "./Toast.jsx";
 import {
   Button,
   Badge,
@@ -13,7 +14,9 @@ import {
   FormGroup,
   FormControl,
   ControlLabel,
-  ButtonToolbar
+  ButtonToolbar,
+  Alert,
+  ButtonGroup
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 export default class IssueEdit extends React.Component {
@@ -21,11 +24,20 @@ export default class IssueEdit extends React.Component {
     super();
     this.state = {
       issue: {},
-      invalidFields: {}
+      invalidFields: {},
+      showingValidation: false,
+      toastVisible: false,
+      toastMessage: "",
+      toastType: "danger"
     };
     this.onChange = this.onChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onValidityChange = this.onValidityChange.bind(this);
+    this.showValidation = this.showValidation.bind(this);
+    this.dismissValidation = this.dismissValidation.bind(this);
+    this.showSuccess = this.showSuccess.bind(this);
+    this.showError = this.showError.bind(this);
+    this.dismissToast = this.dismissToast.bind(this);
   }
 
   componentDidMount() {
@@ -66,6 +78,7 @@ export default class IssueEdit extends React.Component {
 
   async handleSubmit(e) {
     e.preventDefault();
+    this.showValidation();
     const { issue, invalidFields } = this.state;
     if (Object.keys(invalidFields).length !== 0) return;
     const query = `mutation issueUpdate(
@@ -82,10 +95,10 @@ export default class IssueEdit extends React.Component {
       }
     }`;
     const { id, created, ...changes } = issue;
-    const data = await graphQLFetch(query, { changes, id });
+    const data = await graphQLFetch(query, { changes, id }, this.showError);
     if (data) {
       this.setState({ issue: data.issueUpdate });
-      alert("Updated issue Successfully");
+      this.showSuccess("Issue updated successfully");
     }
   }
 
@@ -101,14 +114,36 @@ export default class IssueEdit extends React.Component {
       }
     } = this.props;
     const x = Number(id);
-    const data = await graphQLFetch(query, { id: x });
+    const data = await graphQLFetch(query, { id: x }, this.showError);
     this.setState({ issue: data ? data.issue : {}, invalidFields: {} });
+  }
+  showValidation() {
+    this.setState({ showingValidation: true });
+  }
+  dismissValidation() {
+    this.setState({ showingValidation: false });
+  }
+  showSuccess(message) {
+    this.setState({
+      toastVisible: true,
+      toastMessage: message,
+      toastType: "success"
+    });
+  }
+  showError(message) {
+    this.setState({
+      toastVisible: true,
+      toastMessage: message,
+      toastType: "danger"
+    });
+  }
+  dismissToast() {
+    this.setState({
+      toastVisible: false
+    });
   }
 
   render() {
-    const style = {
-      margin: 10
-    };
     const {
       issue: { id }
     } = this.state;
@@ -124,13 +159,15 @@ export default class IssueEdit extends React.Component {
 
       return null;
     }
-    const { invalidFields } = this.state;
+    const { toastVisible, toastMessage, toastType } = this.state;
+    const { invalidFields, showingValidation } = this.state;
     let validationMessage;
-    if (Object.keys(invalidFields).length !== 0) {
+    console.log(invalidFields);
+    if (Object.keys(invalidFields).length !== 0 && showingValidation) {
       validationMessage = (
-        <div className="error">
+        <Alert bsStyle="danger" onDismiss={this.dismissValidation}>
           Please correct invalid fiels before submitting.
-        </div>
+        </Alert>
       );
     }
     const {
@@ -217,11 +254,13 @@ export default class IssueEdit extends React.Component {
               <Col sm={9}>
                 <FormControl
                   componentClass={DateInput}
+                  onValidityChange={this.onValidityChange}
                   name="due"
                   value={due}
                   onChange={this.onChange}
                   key={id}
                 />
+                <FormControl.Feedback />
               </Col>
             </FormGroup>
 
@@ -259,15 +298,22 @@ export default class IssueEdit extends React.Component {
             </FormGroup>
 
             <FormGroup>
-              <Col smOffset={3} sm={6} componentClass={ControlLabel}>
+              <Col smOffset={2} sm={6} componentClass={ControlLabel}>
                 <ButtonToolbar>
-                  <Button bsStyle="primary" type="submit">
-                    Submit
-                  </Button>
-                  <LinkContainer to="/issues">
-                    <Button bsStyle="link">Back</Button>
-                  </LinkContainer>
+                  <ButtonGroup>
+                    <Button bsStyle="primary" type="submit">
+                      Submit
+                    </Button>
+                    <LinkContainer to="/issues">
+                      <Button bsStyle="link">Back</Button>
+                    </LinkContainer>
+                  </ButtonGroup>
                 </ButtonToolbar>
+              </Col>
+            </FormGroup>
+            <FormGroup>
+              <Col smOffset={2} sm={9}>
+                {validationMessage}
               </Col>
             </FormGroup>
           </Form>
@@ -281,7 +327,15 @@ export default class IssueEdit extends React.Component {
             <Badge> Next </Badge>
           </Link>
         </Panel.Footer>
+        <Toast
+          showing={toastVisible}
+          onDismiss={this.dismissToast}
+          bsStyle={toastType}
+        >
+          {toastMessage}
+        </Toast>
       </Panel>
     );
+    return null;
   }
 }
