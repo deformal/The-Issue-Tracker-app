@@ -38,6 +38,10 @@ async function add(_, { issue }) {
   Validate(issue);
   issue.created = new Date();
   issue.id = await getNextSequence("issues");
+  const finding = await db.collection("issues").findOne({ id: issue.id });
+  if (finding) {
+    issue.id = issue.id + 1;
+  }
   const result = await db.collection("issues").insertOne(issue);
   const savedIssue = await db
     .collection("issues")
@@ -74,7 +78,6 @@ async function removing(_, { id }) {
       const cntr = await db
         .collection("counters")
         .updateOne({ _id: "issues" }, { $set: { current: newCount } });
-      11;
       return result.deletedCount === 1;
     }
   } else {

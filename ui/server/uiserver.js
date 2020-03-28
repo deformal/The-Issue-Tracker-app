@@ -10,8 +10,6 @@ dotenv.config();
 const port = process.env.UI_SERVER_PORT;
 const config = require("../webpack.config.js")[0];
 const apiProxyTarget = process.env.API_PROXY_TARGET;
-const UI_API_ENDPOINT = process.env.UI_API_ENDPOINT || "/graphql";
-const env = { UI_API_ENDPOINT };
 const enableHMR = (process.env.ENABLE_HMR || "true") === "true";
 
 if (enableHMR && process.env.NODE_ENV !== "production") {
@@ -40,8 +38,12 @@ if (apiProxyTarget) {
 if (!process.env.UI_API_ENDPOINT) {
   process.env.UI_API_ENDPOINT = "http://localhost:2000/graphql";
 }
+if (!process.env.UI_SERVER_API_ENDPOINT) {
+  process.env.UI_API_ENDPOINT = process.env.UI_API_ENDPOINT;
+}
 
 app.use(express.static("public"), function(req, res, next) {
+  const env = { UI_API_ENDPOINT: process.env.UI_API_ENDPOINT };
   res.header("Access-Control-Allow-Origin", env); // update to match the domain you will make the request from
   res.header(
     "Access-Control-Allow-Headers",
@@ -51,6 +53,7 @@ app.use(express.static("public"), function(req, res, next) {
 });
 
 app.get("/env.js", (req, res) => {
+  const env = { UI_API_ENDPOINT: process.env.UI_API_ENDPOINT };
   res.send(`window.ENV = ${JSON.stringify(env)}`);
   console.log(res.headersSent);
 });
