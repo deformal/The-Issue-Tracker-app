@@ -28,25 +28,23 @@ export default class IssueAdd extends React.Component {
   }
   render() {
     return (
-      <div className="formarea">
-        <Form inline name="issueAdd" onSubmit={this.handleSubmit}>
-          <FormGroup>
-            <ControlLabel>Owner:</ControlLabel>
-            {"  "}
-            <FormControl type="text" name="owner" />
-          </FormGroup>
+      <Form inline name="issueAdd" onSubmit={this.handleSubmit}>
+        <FormGroup>
+          <ControlLabel>Owner:</ControlLabel>
           {"  "}
-          <FormGroup>
-            <ControlLabel>Title:</ControlLabel>
-            {"  "}
-            <FormControl type="text" name="title" />
-          </FormGroup>
-          {"    "}
-          <Button bsStyle="primary" type="submit">
-            Add
-          </Button>
-        </Form>
-      </div>
+          <FormControl type="text" name="owner" />
+        </FormGroup>
+        {"  "}
+        <FormGroup>
+          <ControlLabel>Title:</ControlLabel>
+          {"  "}
+          <FormControl type="text" name="title" />
+        </FormGroup>
+        {"    "}
+        <Button bsStyle="primary" type="submit">
+          Add
+        </Button>
+      </Form>
     );
   }
 }

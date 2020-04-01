@@ -36,7 +36,7 @@ if (apiProxyTarget) {
 }
 
 if (!process.env.UI_API_ENDPOINT) {
-  process.env.UI_API_ENDPOINT = "http://localhost:2000/graphql";
+  process.env.UI_API_ENDPOINT = "/graphql";
 }
 if (!process.env.UI_SERVER_API_ENDPOINT) {
   process.env.UI_API_ENDPOINT = process.env.UI_API_ENDPOINT;
@@ -58,12 +58,8 @@ app.get("/env.js", (req, res) => {
   console.log(res.headersSent);
 });
 
-app.get("/about", (req, res, next) => {
+app.get("*", (req, res, next) => {
   render(req, res, next);
-});
-
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve("public/index.html"));
 });
 app.listen(port, function() {
   console.log(`ui server started on port ${port}`);
