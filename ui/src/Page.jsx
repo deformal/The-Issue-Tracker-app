@@ -24,9 +24,6 @@ function Header() {
       </NavbarHeader>
       <Navbar.Collapse>
         <Nav>
-          <LinkContainer exact to="/">
-            <NavItem>Home</NavItem>
-          </LinkContainer>
           <LinkContainer to="/issues">
             <NavItem>Issue List</NavItem>
           </LinkContainer>

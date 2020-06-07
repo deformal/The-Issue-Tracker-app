@@ -1,18 +1,60 @@
 import React from "react";
 import IssueFilter from "./IssueFilter.jsx";
+import store from './Store.js'
 import IssueTable from "./IssueTable.jsx";
 import IssueReport from "./IssueReport.jsx";
 import graphQLFetch from "./graphQLFetch.js";
 import IssueDetail from "./IssueDetail.jsx";
-import URLSearchParams from "url-search-params"; //the url search parameter are installed in here and are passed to other components
-import { Route, BrowserRouter } from "react-router-dom";
+import URLSearchParams from "url-search-params"; 
+import {Route} from 'react-router-dom'  //the url search parameter are installed in here and are passed to other components
 import { Panel } from "react-bootstrap";
 import Toast from "./Toast.jsx";
 export default class IssueList extends React.Component {
+
+  static async fetchData(match,search,showError){
+    const params = new URLSearchParams(search);
+    const vars ={hasSelection: false,selectedId:0};
+    if(params.get('status')) vars.status = params.get('status');
+    const effortMin = parseInt(params.get('effortMin'),10);
+    if(!Number.isNaN(effortMin)) vars.effortMin = effortMin;
+    const effortMax = parseInt(params.get('effortMax'),10);
+    if(!Number.isNaN(effortMax)) vars.effortMax = effortMax;
+
+    const {params : { id }} = match
+    const idInt = parseInt(id,10);
+    if(!Number.isNaN(idInt)){
+      vars.hasSelection = true;
+      vars.selectedId = idInt;
+}
+    const query = `query List(
+      $status : StatusType
+      $effortMin: Int
+      $effortMax : Int
+      $hasSelection : Boolean!
+      $selectedId : Int!
+    ){
+      List(
+        status : $status
+        effortMin : $effortMin
+        effortMax : $effortMax
+      )
+      }
+      issue(id : $selectedId) @include (if : $hasSelection){
+        id description
+      }
+    }`;
+    const data = await graphQLFetch(query,vars,showError);
+    return data;
+     
+  }
   constructor() {
     super();
+    const issues = store.initialData ? store.initialData.issueList : null;
+    const selectedIssue = store.initialData ? store.initialData.issues : null;
+    delete store.initialData;
     this.state = {
-      issues: [],
+      issues,
+      selectedIssue,
       toastVisible: false,
       toastMessage: "",
       toastType: "info"
@@ -26,18 +68,22 @@ export default class IssueList extends React.Component {
   }
 
   componentDidMount() {
+    const {issues} = this.state;
+    if(issues == null) this.loadData();
     this.loadData();
     console.log("the componenet is loaded");
   }
 
   componentDidUpdate(prevProps) {
     const {
-      location: { search: prevSearch }
+      location: { search: prevSearch },
+      match:{params:{id:prevId}},
     } = prevProps;
     const {
-      location: { search }
+      location: { search },
+      match:{params:{id}}
     } = this.props;
-    if (prevSearch !== search) {
+    if (prevSearch !== search || prevId !== id) {
       this.loadData();
       console.log(`component did update is working fine `);
     } else console.log("Component not updated");
@@ -46,7 +92,7 @@ export default class IssueList extends React.Component {
   async loadData() {
     try {
       const {
-        location: { search }
+        location: { search,match }
       } = this.props;
       const params = new URLSearchParams(search);
       const vars = {};
@@ -68,9 +114,9 @@ export default class IssueList extends React.Component {
         id title status owner created effort due
       }
     }`;
-      const data = await graphQLFetch(query, vars, this.showError);
+      const data = await IssueList.fetchData(match,query, vars, this.showError);
       if (data) {
-        this.setState({ issues: data.List });
+        this.setState({ issues: data.List, selectedIssue:data.issue });
       }
     } catch (err) {
       console.error(err);
@@ -148,7 +194,9 @@ export default class IssueList extends React.Component {
   }
 
   render() {
-    const { match } = this.props;
+    const {issues} = this.state;
+    if(issues == null) return null;
+    const { selectedIssue } = this.state;
     const style = {
       margin: 30
     };
@@ -173,7 +221,7 @@ export default class IssueList extends React.Component {
           deleteIssue={this.deleteIssue}
         />
         <hr />
-        <Route path={`${match.path}/:id`} component={IssueDetail} />
+       <IssueDetail issue={selectedIssue} />
         <IssueReport />
         <Toast
           showing={toastVisible}

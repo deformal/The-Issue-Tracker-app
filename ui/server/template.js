@@ -1,4 +1,6 @@
+import serialize from 'serialize-javascript';
 export default function template(body, data) {
+  
   return `<html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -20,7 +22,7 @@ export default function template(body, data) {
 
   <body>
     <div id="contents">${body}</div>
-    <script>window._INITIAL_DATA_ = ${JSON.stringify(data)}</script>
+    <script>window._INITIAL_DATA_ = ${serialize(data)}</script>
     <script src="/env.js"></script>
     <script src="/app.bundle.js"></script>
     <script src="/vendor.bundle.js"></script>

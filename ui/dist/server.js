@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "0fa831e66e7917497089";
+/******/ 	var hotCurrentHash = "07db2b971282afc52647";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -950,7 +950,9 @@ async function render(req, res) {
 
   if (activeRoute && activeRoute.component.fetchData) {
     const match = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["matchPath"])(req.path, activeRoute);
-    initialData = await activeRoute.component.fetchData(match);
+    const index = req.url.indexOf('?');
+    const search = index !== -1 ? req.url.substr(index) : null;
+    initialData = await activeRoute.component.fetchData(match, search);
   }
 
   const element = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["StaticRouter"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_src_Page_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], null));
@@ -972,6 +974,9 @@ async function render(req, res) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return template; });
+/* harmony import */ var serialize_javascript__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! serialize-javascript */ "serialize-javascript");
+/* harmony import */ var serialize_javascript__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(serialize_javascript__WEBPACK_IMPORTED_MODULE_0__);
+
 function template(body, data) {
   return `<html lang="en">
   <head>
@@ -994,7 +999,7 @@ function template(body, data) {
 
   <body>
     <div id="contents">${body}</div>
-    <script>window._INITIAL_DATA_ = ${JSON.stringify(data)}</script>
+    <script>window._INITIAL_DATA_ = ${serialize_javascript__WEBPACK_IMPORTED_MODULE_0___default()(data)}</script>
     <script src="/env.js"></script>
     <script src="/app.bundle.js"></script>
     <script src="/vendor.bundle.js"></script>
@@ -1189,11 +1194,7 @@ const notFound = () => {
 };
 
 function Contents() {
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
-    exact: true,
-    from: "/",
-    to: "/issues"
-  }), _routes_js__WEBPACK_IMPORTED_MODULE_2__["default"].map(attrs => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], _extends({}, attrs, {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, _routes_js__WEBPACK_IMPORTED_MODULE_2__["default"].map(attrs => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], _extends({}, attrs, {
     key: attrs.path
   }))));
 }
@@ -1460,114 +1461,97 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return IssueDetail; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _graphQLFetch_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./graphQLFetch.js */ "./src/graphQLFetch.js");
-/* harmony import */ var _Toast_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Toast.jsx */ "./src/Toast.jsx");
 
-
-
-class IssueDetail extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
-  constructor() {
-    super();
-    this.state = {
-      issue: {},
-      toastVisible: false,
-      toastMessage: "",
-      toastType: "info"
-    };
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
+function IssueDetail({
+  issue
+}) {
+  if (issue) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Descripton"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("pre", null, issue.description));
   }
 
-  componentDidMount() {
-    this.loadData();
-  }
-
-  componentDidUpdate(prevProps) {
-    const {
-      match: {
-        params: {
-          id: prevId
-        }
-      }
-    } = prevProps;
-    const {
-      match: {
-        params: {
-          id
-        }
-      }
-    } = this.props;
-
-    if (prevId !== id) {
-      this.loadData();
-    }
-
-    console.log(this.props.match);
-  }
-
-  showError(message) {
-    this.setState({
-      toastVisible: true,
-      toastMessage: message,
-      toastType: "danger"
-    });
-  }
-
-  dismissToast() {
-    this.setState({
-      toastVisible: false
-    });
-  }
-
-  async loadData() {
-    const {
-      match: {
-        params: {
-          id
-        }
-      }
-    } = this.props;
-    const query = `query issue($id:Int!){
-          issue(id:$id){
-              id description
-          }
-      }`;
-    const x = Number(id); //it finaly worked awesome
-
-    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_1__["default"])(query, {
-      id: x
-    }, this.showError);
-
-    if (data) {
-      this.setState({
-        issue: data.issue
-      });
-    } else {
-      this.setState({
-        issue: {}
-      });
-    }
-  }
-
-  render() {
-    const {
-      issue: {
-        description
-      }
-    } = this.state;
-    const {
-      toastVisible,
-      toastType,
-      toastMessage
-    } = this.state;
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Descripton"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("pre", null, description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Toast_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      showing: toastVisible,
-      onDismiss: this.dismissToast,
-      bsStyle: toastType
-    }, toastMessage));
-  }
-
-}
+  return null;
+} // import graphQLFetch from "./graphQLFetch.js";
+// import Toast from "./Toast.jsx";
+// export default class IssueDetail extends React.Component {
+//   constructor() {
+//     super();
+//     this.state = {
+//       issue: {},
+//       toastVisible: false,
+//       toastMessage: "",
+//       toastType: "info"
+//     };
+//     this.showError = this.showError.bind(this);
+//     this.dismissToast = this.dismissToast.bind(this);
+//   }
+//   componentDidMount() {
+//     this.loadData();
+//   }
+//   componentDidUpdate(prevProps) {
+//     const {
+//       match: {
+//         params: { id: prevId }
+//       }
+//     } = prevProps;
+//     const {
+//       match: {
+//         params: { id }
+//       }
+//     } = this.props;
+//     if (prevId !== id) {
+//       this.loadData();
+//     }
+//     console.log(this.props.match);
+//   }
+//   showError(message) {
+//     this.setState({
+//       toastVisible: true,
+//       toastMessage: message,
+//       toastType: "danger"
+//     });
+//   }
+//   dismissToast() {
+//     this.setState({ toastVisible: false });
+//   }
+//   async loadData() {
+//     const {
+//       match: {
+//         params: { id }
+//       }
+//     } = this.props;
+//     const query = `query issue($id:Int!){
+//           issue(id:$id){
+//               id description
+//           }
+//       }`;
+//     const x = Number(id); //it finaly worked awesome
+//     const data = await graphQLFetch(query, { id: x }, this.showError);
+//     if (data) {
+//       this.setState({ issue: data.issue });
+//     } else {
+//       this.setState({ issue: {} });
+//     }
+//   }
+//   render() {
+//     const {
+//       issue: { description }
+//     } = this.state;
+//     const { toastVisible, toastType, toastMessage } = this.state;
+//     return (
+//       <div>
+//         <h3>Descripton</h3>
+//         <pre>{description}</pre>
+//         <Toast
+//           showing={toastVisible}
+//           onDismiss={this.dismissToast}
+//           bsStyle={toastType}
+//         >
+//           {toastMessage}
+//         </Toast>
+//       </div>
+//     );
+//   }
+// }
 
 /***/ }),
 
@@ -1752,7 +1736,7 @@ class IssueEdit extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const {
       match
     } = this.props;
-    const data = await IssueEdit.fetchData(match, this.showError);
+    const data = await IssueEdit.fetchData(match, null, this.showError);
     this.setState({
       issue: data ? data.issue : {},
       invalidFields: {}
@@ -2191,17 +2175,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _IssueFilter_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./IssueFilter.jsx */ "./src/IssueFilter.jsx");
-/* harmony import */ var _IssueTable_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./IssueTable.jsx */ "./src/IssueTable.jsx");
-/* harmony import */ var _IssueReport_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./IssueReport.jsx */ "./src/IssueReport.jsx");
-/* harmony import */ var _graphQLFetch_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./graphQLFetch.js */ "./src/graphQLFetch.js");
-/* harmony import */ var _IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./IssueDetail.jsx */ "./src/IssueDetail.jsx");
-/* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! url-search-params */ "url-search-params");
-/* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(url_search_params__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "react-router-dom");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_router_dom__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-bootstrap */ "react-bootstrap");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _Toast_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Toast.jsx */ "./src/Toast.jsx");
+/* harmony import */ var _Store_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Store.js */ "./src/Store.js");
+/* harmony import */ var _IssueTable_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./IssueTable.jsx */ "./src/IssueTable.jsx");
+/* harmony import */ var _IssueReport_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./IssueReport.jsx */ "./src/IssueReport.jsx");
+/* harmony import */ var _graphQLFetch_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./graphQLFetch.js */ "./src/graphQLFetch.js");
+/* harmony import */ var _IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./IssueDetail.jsx */ "./src/IssueDetail.jsx");
+/* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! url-search-params */ "url-search-params");
+/* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(url_search_params__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "react-router-dom");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_router_dom__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-bootstrap */ "react-bootstrap");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _Toast_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Toast.jsx */ "./src/Toast.jsx");
+
+
 
 
 
@@ -2212,12 +2199,59 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  static async fetchData(match, search, showError) {
+    const params = new url_search_params__WEBPACK_IMPORTED_MODULE_7___default.a(search);
+    const vars = {
+      hasSelection: false,
+      selectedId: 0
+    };
+    if (params.get('status')) vars.status = params.get('status');
+    const effortMin = parseInt(params.get('effortMin'), 10);
+    if (!Number.isNaN(effortMin)) vars.effortMin = effortMin;
+    const effortMax = parseInt(params.get('effortMax'), 10);
+    if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
+    const {
+      params: {
+        id
+      }
+    } = match;
+    const idInt = parseInt(id, 10);
+
+    if (!Number.isNaN(idInt)) {
+      vars.hasSelection = true;
+      vars.selectedId = idInt;
+    }
+
+    const query = `query List(
+      $status : StatusType
+      $effortMin: Int
+      $effortMax : Int
+      $hasSelection : Boolean!
+      $selectedId : Int!
+    ){
+      List(
+        status : $status
+        effortMin : $effortMin
+        effortMax : $effortMax
+      )
+      }
+      issue(id : $selectedId) @include (if : $hasSelection){
+        id description
+      }
+    }`;
+    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_5__["default"])(query, vars, showError);
+    return data;
+  }
+
   constructor() {
     super();
+    const issues = _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData ? _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData.issueList : null;
+    const selectedIssue = _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData ? _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData.issues : null;
+    delete _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData;
     this.state = {
-      issues: [],
+      issues,
+      selectedIssue,
       toastVisible: false,
       toastMessage: "",
       toastType: "info"
@@ -2230,6 +2264,10 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   }
 
   componentDidMount() {
+    const {
+      issues
+    } = this.state;
+    if (issues == null) this.loadData();
     this.loadData();
     console.log("the componenet is loaded");
   }
@@ -2238,15 +2276,25 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const {
       location: {
         search: prevSearch
+      },
+      match: {
+        params: {
+          id: prevId
+        }
       }
     } = prevProps;
     const {
       location: {
         search
+      },
+      match: {
+        params: {
+          id
+        }
       }
     } = this.props;
 
-    if (prevSearch !== search) {
+    if (prevSearch !== search || prevId !== id) {
       this.loadData();
       console.log(`component did update is working fine `);
     } else console.log("Component not updated");
@@ -2256,10 +2304,11 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     try {
       const {
         location: {
-          search
+          search,
+          match
         }
       } = this.props;
-      const params = new url_search_params__WEBPACK_IMPORTED_MODULE_6___default.a(search);
+      const params = new url_search_params__WEBPACK_IMPORTED_MODULE_7___default.a(search);
       const vars = {};
       if (params.get("status")) vars.status = params.get("status");
       const effortMin = parseInt(params.get("effortMin", 10));
@@ -2279,11 +2328,12 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         id title status owner created effort due
       }
     }`;
-      const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_4__["default"])(query, vars, this.showError);
+      const data = await IssueList.fetchData(match, query, vars, this.showError);
 
       if (data) {
         this.setState({
-          issues: data.List
+          issues: data.List,
+          selectedIssue: data.issue
         });
       }
     } catch (err) {
@@ -2300,7 +2350,7 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const {
       issues
     } = this.state;
-    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_4__["default"])(query, {
+    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_5__["default"])(query, {
       id: issues[index].id
     }, this.showError);
 
@@ -2334,7 +2384,7 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const {
       id
     } = issues[index];
-    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_4__["default"])(query, {
+    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_5__["default"])(query, {
       id
     }, this.showError);
 
@@ -2384,8 +2434,12 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
 
   render() {
     const {
-      match
-    } = this.props;
+      issues
+    } = this.state;
+    if (issues == null) return null;
+    const {
+      selectedIssue
+    } = this.state;
     const style = {
       margin: 30
     };
@@ -2397,21 +2451,20 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const hasFilter = location.search !== "";
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       id: "all"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["Panel"], {
       defaultExpanded: hasFilter
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"].Heading, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"].Title, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["Panel"].Heading, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["Panel"].Title, {
       toggle: true
-    }, "Filter")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"].Body, {
+    }, "Filter")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["Panel"].Body, {
       collapsible: true
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueFilter_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueTable_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueFilter_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueTable_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       issues: this.state.issues,
       closeIssue: this.closeIssue,
       stat: this.state.Status,
       deleteIssue: this.deleteIssue
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__["Route"], {
-      path: `${match.path}/:id`,
-      component: _IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_5__["default"]
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueReport_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Toast_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      issue: selectedIssue
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueReport_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Toast_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
       showing: toastVisible,
       onDismiss: this.dismissToast,
       bsStyle: toastType
@@ -2681,9 +2734,6 @@ function Header() {
     inverse: true,
     collapseOnSelect: true
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_lib_NavbarHeader__WEBPACK_IMPORTED_MODULE_5___default.a, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Navbar"].Brand, null, "Issue Tracker"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Navbar"].Toggle, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Navbar"].Collapse, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Nav"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_bootstrap__WEBPACK_IMPORTED_MODULE_2__["LinkContainer"], {
-    exact: true,
-    to: "/"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["NavItem"], null, "Home")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_bootstrap__WEBPACK_IMPORTED_MODULE_2__["LinkContainer"], {
     to: "/issues"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["NavItem"], null, "Issue List")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_bootstrap__WEBPACK_IMPORTED_MODULE_2__["LinkContainer"], {
     to: "/report"
@@ -2939,7 +2989,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const routes = [{
-  path: "/issues",
+  path: "/issues/:id?",
   component: _IssueList_jsx__WEBPACK_IMPORTED_MODULE_0__["default"]
 }, {
   path: "/edit/:id",
@@ -3180,6 +3230,17 @@ module.exports = require("react-router-bootstrap");
 /***/ (function(module, exports) {
 
 module.exports = require("react-router-dom");
+
+/***/ }),
+
+/***/ "serialize-javascript":
+/*!***************************************!*\
+  !*** external "serialize-javascript" ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("serialize-javascript");
 
 /***/ }),
 

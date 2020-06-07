@@ -21,7 +21,7 @@ import {
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 export default class IssueEdit extends React.Component {
-  static async fetchData(match, showError) {
+  static async fetchData(match,showError) {
     const query = `query issue($id:Int!){
       issue(id:$id){
         id title status owner
@@ -128,7 +128,7 @@ export default class IssueEdit extends React.Component {
    }
   }`;
     const { match } = this.props;
-    const data = await IssueEdit.fetchData(match, this.showError);
+    const data = await IssueEdit.fetchData(match, null ,this.showError);
     this.setState({ issue: data ? data.issue : {}, invalidFields: {} });
   }
   showValidation() {
