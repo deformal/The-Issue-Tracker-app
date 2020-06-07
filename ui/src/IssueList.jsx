@@ -5,8 +5,7 @@ import IssueTable from "./IssueTable.jsx";
 import IssueReport from "./IssueReport.jsx";
 import graphQLFetch from "./graphQLFetch.js";
 import IssueDetail from "./IssueDetail.jsx";
-import URLSearchParams from "url-search-params"; 
-import {Route} from 'react-router-dom'  //the url search parameter are installed in here and are passed to other components
+import URLSearchParams from "url-search-params";  //the url search parameter are installed in here and are passed to other components
 import { Panel } from "react-bootstrap";
 import Toast from "./Toast.jsx";
 export default class IssueList extends React.Component {
@@ -20,7 +19,7 @@ export default class IssueList extends React.Component {
     const effortMax = parseInt(params.get('effortMax'),10);
     if(!Number.isNaN(effortMax)) vars.effortMax = effortMax;
 
-    const {params : { id }} = match
+    const {params : { id }} = match;
     const idInt = parseInt(id,10);
     if(!Number.isNaN(idInt)){
       vars.hasSelection = true;
@@ -38,7 +37,7 @@ export default class IssueList extends React.Component {
         effortMin : $effortMin
         effortMax : $effortMax
       )
-      }
+      {id title status owner created effort due}                                                                                                 
       issue(id : $selectedId) @include (if : $hasSelection){
         id description
       }
@@ -49,7 +48,7 @@ export default class IssueList extends React.Component {
   }
   constructor() {
     super();
-    const issues = store.initialData ? store.initialData.issueList : null;
+    const issues = store.initialData ? store.initialData.List : null;
     const selectedIssue = store.initialData ? store.initialData.issues : null;
     delete store.initialData;
     this.state = {
@@ -69,54 +68,35 @@ export default class IssueList extends React.Component {
 
   componentDidMount() {
     const {issues} = this.state;
-    if(issues == null) this.loadData();
-    this.loadData();
-    console.log("the componenet is loaded");
+    if(issues == null){ 
+      this.loadData()
+    console.log("the componenet is loaded")
+    }
+    else{
+    console.log("no issues");
+    }
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      location: { search: prevSearch },
-      match:{params:{id:prevId}},
-    } = prevProps;
-    const {
-      location: { search },
-      match:{params:{id}}
-    } = this.props;
+    try{
+    const { location: { search: prevSearch },match:{params:{id:prevId}}} = prevProps;
+    const {location: { search },match:{params:{id}}} = this.props;
     if (prevSearch !== search || prevId !== id) {
       this.loadData();
       console.log(`component did update is working fine `);
-    } else console.log("Component not updated");
+    } 
   }
+  catch(err){
+console.log(err)
+  }
+}
 
   async loadData() {
     try {
-      const {
-        location: { search,match }
-      } = this.props;
-      const params = new URLSearchParams(search);
-      const vars = {};
-      if (params.get("status")) vars.status = params.get("status");
-      const effortMin = parseInt(params.get("effortMin", 10));
-      if (!Number.isNaN(effortMin)) vars.effortMin = effortMin;
-      const effortMax = parseInt(params.get("effortMax"), 10);
-      if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
-      const query = `query List(
-        $status:StatusType
-        $effortMin:Int
-        $effortMax:Int
-        ){
-      List(
-        status:$status
-        effortMin:$effortMin
-        effortMax:$effortMax
-        ){
-        id title status owner created effort due
-      }
-    }`;
-      const data = await IssueList.fetchData(match,query, vars, this.showError);
+      const { location: { search}, match }  = this.props;
+      const data = await IssueList.fetchData(match,search, this.showError);
       if (data) {
-        this.setState({ issues: data.List, selectedIssue:data.issue });
+        this.setState({ issues: data.List, selectedIssue: data.issue });
       }
     } catch (err) {
       console.error(err);

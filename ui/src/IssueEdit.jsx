@@ -21,7 +21,7 @@ import {
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 export default class IssueEdit extends React.Component {
-  static async fetchData(match,showError) {
+  static async fetchData(match,search,showError) {
     const query = `query issue($id:Int!){
       issue(id:$id){
         id title status owner
@@ -60,7 +60,6 @@ export default class IssueEdit extends React.Component {
   componentDidMount() {
     const { issue } = this.state;
     if (issue == null) this.loadData();
-    this.loadData();
   }
 
   componentDidUpdate(prevProps) {

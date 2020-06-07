@@ -21,6 +21,7 @@ export default class About extends React.Component {
     }
   }
   render() {
+    
     const { apiAbout } = this.state;
     return (
       <div className="text-center">

@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "07db2b971282afc52647";
+/******/ 	var hotCurrentHash = "c180532a0f74bd481783";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1470,88 +1470,7 @@ function IssueDetail({
   }
 
   return null;
-} // import graphQLFetch from "./graphQLFetch.js";
-// import Toast from "./Toast.jsx";
-// export default class IssueDetail extends React.Component {
-//   constructor() {
-//     super();
-//     this.state = {
-//       issue: {},
-//       toastVisible: false,
-//       toastMessage: "",
-//       toastType: "info"
-//     };
-//     this.showError = this.showError.bind(this);
-//     this.dismissToast = this.dismissToast.bind(this);
-//   }
-//   componentDidMount() {
-//     this.loadData();
-//   }
-//   componentDidUpdate(prevProps) {
-//     const {
-//       match: {
-//         params: { id: prevId }
-//       }
-//     } = prevProps;
-//     const {
-//       match: {
-//         params: { id }
-//       }
-//     } = this.props;
-//     if (prevId !== id) {
-//       this.loadData();
-//     }
-//     console.log(this.props.match);
-//   }
-//   showError(message) {
-//     this.setState({
-//       toastVisible: true,
-//       toastMessage: message,
-//       toastType: "danger"
-//     });
-//   }
-//   dismissToast() {
-//     this.setState({ toastVisible: false });
-//   }
-//   async loadData() {
-//     const {
-//       match: {
-//         params: { id }
-//       }
-//     } = this.props;
-//     const query = `query issue($id:Int!){
-//           issue(id:$id){
-//               id description
-//           }
-//       }`;
-//     const x = Number(id); //it finaly worked awesome
-//     const data = await graphQLFetch(query, { id: x }, this.showError);
-//     if (data) {
-//       this.setState({ issue: data.issue });
-//     } else {
-//       this.setState({ issue: {} });
-//     }
-//   }
-//   render() {
-//     const {
-//       issue: { description }
-//     } = this.state;
-//     const { toastVisible, toastType, toastMessage } = this.state;
-//     return (
-//       <div>
-//         <h3>Descripton</h3>
-//         <pre>{description}</pre>
-//         <Toast
-//           showing={toastVisible}
-//           onDismiss={this.dismissToast}
-//           bsStyle={toastType}
-//         >
-//           {toastMessage}
-//         </Toast>
-//       </div>
-//     );
-//   }
-// }
+}
 
 /***/ }),
 
@@ -1590,7 +1509,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class IssueEdit extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
-  static async fetchData(match, showError) {
+  static async fetchData(match, search, showError) {
     const query = `query issue($id:Int!){
       issue(id:$id){
         id title status owner
@@ -1636,7 +1555,6 @@ class IssueEdit extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       issue
     } = this.state;
     if (issue == null) this.loadData();
-    this.loadData();
   }
 
   componentDidUpdate(prevProps) {
@@ -2182,12 +2100,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./IssueDetail.jsx */ "./src/IssueDetail.jsx");
 /* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! url-search-params */ "url-search-params");
 /* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(url_search_params__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "react-router-dom");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_router_dom__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-bootstrap */ "react-bootstrap");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _Toast_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Toast.jsx */ "./src/Toast.jsx");
-
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-bootstrap */ "react-bootstrap");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _Toast_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Toast.jsx */ "./src/Toast.jsx");
 
 
 
@@ -2235,7 +2150,7 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         effortMin : $effortMin
         effortMax : $effortMax
       )
-      }
+      {id title status owner created effort due}                                                                                                 
       issue(id : $selectedId) @include (if : $hasSelection){
         id description
       }
@@ -2246,7 +2161,7 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
 
   constructor() {
     super();
-    const issues = _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData ? _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData.issueList : null;
+    const issues = _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData ? _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData.List : null;
     const selectedIssue = _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData ? _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData.issues : null;
     delete _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData;
     this.state = {
@@ -2267,68 +2182,56 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const {
       issues
     } = this.state;
-    if (issues == null) this.loadData();
-    this.loadData();
-    console.log("the componenet is loaded");
+
+    if (issues == null) {
+      this.loadData();
+      console.log("the componenet is loaded");
+    } else {
+      console.log("no issues");
+    }
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      location: {
-        search: prevSearch
-      },
-      match: {
-        params: {
-          id: prevId
+    try {
+      const {
+        location: {
+          search: prevSearch
+        },
+        match: {
+          params: {
+            id: prevId
+          }
         }
-      }
-    } = prevProps;
-    const {
-      location: {
-        search
-      },
-      match: {
-        params: {
-          id
+      } = prevProps;
+      const {
+        location: {
+          search
+        },
+        match: {
+          params: {
+            id
+          }
         }
-      }
-    } = this.props;
+      } = this.props;
 
-    if (prevSearch !== search || prevId !== id) {
-      this.loadData();
-      console.log(`component did update is working fine `);
-    } else console.log("Component not updated");
+      if (prevSearch !== search || prevId !== id) {
+        this.loadData();
+        console.log(`component did update is working fine `);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async loadData() {
     try {
       const {
         location: {
-          search,
-          match
-        }
+          search
+        },
+        match
       } = this.props;
-      const params = new url_search_params__WEBPACK_IMPORTED_MODULE_7___default.a(search);
-      const vars = {};
-      if (params.get("status")) vars.status = params.get("status");
-      const effortMin = parseInt(params.get("effortMin", 10));
-      if (!Number.isNaN(effortMin)) vars.effortMin = effortMin;
-      const effortMax = parseInt(params.get("effortMax"), 10);
-      if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
-      const query = `query List(
-        $status:StatusType
-        $effortMin:Int
-        $effortMax:Int
-        ){
-      List(
-        status:$status
-        effortMin:$effortMin
-        effortMax:$effortMax
-        ){
-        id title status owner created effort due
-      }
-    }`;
-      const data = await IssueList.fetchData(match, query, vars, this.showError);
+      const data = await IssueList.fetchData(match, search, this.showError);
 
       if (data) {
         this.setState({
@@ -2451,11 +2354,11 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const hasFilter = location.search !== "";
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       id: "all"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["Panel"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"], {
       defaultExpanded: hasFilter
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["Panel"].Heading, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["Panel"].Title, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"].Heading, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"].Title, {
       toggle: true
-    }, "Filter")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["Panel"].Body, {
+    }, "Filter")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"].Body, {
       collapsible: true
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueFilter_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueTable_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       issues: this.state.issues,
@@ -2464,7 +2367,7 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       deleteIssue: this.deleteIssue
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       issue: selectedIssue
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueReport_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Toast_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueReport_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Toast_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       showing: toastVisible,
       onDismiss: this.dismissToast,
       bsStyle: toastType
