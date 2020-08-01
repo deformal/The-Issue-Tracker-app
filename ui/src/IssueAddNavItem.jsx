@@ -11,24 +11,21 @@ import {
   Button,
   ButtonToolbar,
   Tooltip,
-  OverlayTrigger
+  OverlayTrigger,
 } from "react-bootstrap";
+import withToast from "./withToast.jsx";
+
 import graphQLFetch from "./graphQLFetch.js";
 import Toast from "./Toast.jsx";
 class IssueAddNavItem extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       showing: false,
-      toastVisible: false,
-      toastMessage: "",
-      toastType: "success"
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
   }
   showModal() {
     this.setState({ showing: true });
@@ -36,24 +33,16 @@ class IssueAddNavItem extends React.Component {
   hideModal() {
     this.setState({ showing: false });
   }
-  showError(message) {
-    this.setState({
-      toastVisible: true,
-      toastMessage: message,
-      toastType: "danger"
-    });
-  }
-  dismissToast() {
-    this.setState({ toastVisible: false });
-  }
+
   async handleSubmit(e) {
     e.preventDefault();
     this.hideModal();
+    const { showError } = this.props;
     const form = document.forms.issueAdd;
     const issue = {
       owner: form.owner.value,
       title: form.title.value,
-      due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10)
+      due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10),
     };
     const query = `mutation issueAdd($issue:IssueInputs!){
                   issueAdd(issue:$issue){
@@ -68,7 +57,7 @@ class IssueAddNavItem extends React.Component {
   }
   render() {
     const { showing } = this.state;
-    const { toastVisible, toastMessage, toastType } = this.state;
+
     return (
       <React.Fragment>
         <NavItem onClick={this.showModal}>
@@ -111,15 +100,8 @@ class IssueAddNavItem extends React.Component {
             </ButtonToolbar>
           </Modal.Footer>
         </Modal>
-        <Toast
-          showing={toastVisible}
-          onDismiss={this.dismissToast}
-          bsStyle={toastType}
-        >
-          {toastMessage}
-        </Toast>
       </React.Fragment>
     );
   }
 }
-export default withRouter(IssueAddNavItem);
+export default withToast(withRouter(IssueAddNavItem));

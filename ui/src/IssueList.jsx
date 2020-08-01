@@ -1,30 +1,32 @@
 import React from "react";
 import IssueFilter from "./IssueFilter.jsx";
-import store from './Store.js'
+import store from "./Store.js";
 import IssueTable from "./IssueTable.jsx";
 import IssueReport from "./IssueReport.jsx";
 import graphQLFetch from "./graphQLFetch.js";
 import IssueDetail from "./IssueDetail.jsx";
-import URLSearchParams from "url-search-params";  //the url search parameter are installed in here and are passed to other components
+import URLSearchParams from "url-search-params"; //the url search parameter are installed in here and are passed to other components
 import { Panel } from "react-bootstrap";
-import Toast from "./Toast.jsx";
-export default class IssueList extends React.Component {
+import withToast from "./withToast.jsx";
 
-  static async fetchData(match,search,showError){
+class IssueList extends React.Component {
+  static async fetchData(match, search, showError) {
     const params = new URLSearchParams(search);
-    const vars ={hasSelection: false,selectedId:0};
-    if(params.get('status')) vars.status = params.get('status');
-    const effortMin = parseInt(params.get('effortMin'),10);
-    if(!Number.isNaN(effortMin)) vars.effortMin = effortMin;
-    const effortMax = parseInt(params.get('effortMax'),10);
-    if(!Number.isNaN(effortMax)) vars.effortMax = effortMax;
+    const vars = { hasSelection: false, selectedId: 0 };
+    if (params.get("status")) vars.status = params.get("status");
+    const effortMin = parseInt(params.get("effortMin"), 10);
+    if (!Number.isNaN(effortMin)) vars.effortMin = effortMin;
+    const effortMax = parseInt(params.get("effortMax"), 10);
+    if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
 
-    const {params : { id }} = match;
-    const idInt = parseInt(id,10);
-    if(!Number.isNaN(idInt)){
+    const {
+      params: { id },
+    } = match;
+    const idInt = parseInt(id, 10);
+    if (!Number.isNaN(idInt)) {
       vars.hasSelection = true;
       vars.selectedId = idInt;
-}
+    }
     const query = `query List(
       $status : StatusType
       $effortMin: Int
@@ -42,9 +44,8 @@ export default class IssueList extends React.Component {
         id description
       }
     }`;
-    const data = await graphQLFetch(query,vars,showError);
+    const data = await graphQLFetch(query, vars, showError);
     return data;
-     
   }
   constructor() {
     super();
@@ -54,49 +55,59 @@ export default class IssueList extends React.Component {
     this.state = {
       issues,
       selectedIssue,
-      toastVisible: false,
-      toastMessage: "",
-      toastType: "info"
+      loading: true,
     };
 
     this.closeIssue = this.closeIssue.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
-    this.showSuccess = this.showSuccess.bind(this);
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
   }
 
   componentDidMount() {
-    const {issues} = this.state;
-    if(issues == null){ 
-      this.loadData()
-    console.log("the componenet is loaded")
-    }
-    else{
-    console.log("no issues");
+    const { issues } = this.state;
+    if (issues == null) {
+      this.loadData();
+      console.log("the componenet is loaded");
+    } else {
+      console.log("no issues");
     }
   }
 
   componentDidUpdate(prevProps) {
-    try{
-    const { location: { search: prevSearch },match:{params:{id:prevId}}} = prevProps;
-    const {location: { search },match:{params:{id}}} = this.props;
-    if (prevSearch !== search || prevId !== id) {
-      this.loadData();
-      console.log(`component did update is working fine `);
-    } 
+    try {
+      const {
+        location: { search: prevSearch },
+        match: {
+          params: { id: prevId },
+        },
+      } = prevProps;
+      const {
+        location: { search },
+        match: {
+          params: { id },
+        },
+      } = this.props;
+      if (prevSearch !== search || prevId !== id) {
+        this.loadData();
+        console.log(`component did update is working fine `);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
-  catch(err){
-console.log(err)
-  }
-}
 
   async loadData() {
     try {
-      const { location: { search}, match }  = this.props;
-      const data = await IssueList.fetchData(match,search, this.showError);
+      const {
+        location: { search },
+        match,
+        showError,
+      } = this.props;
+      const data = await IssueList.fetchData(match, search, showError);
       if (data) {
-        this.setState({ issues: data.List, selectedIssue: data.issue });
+        this.setState({
+          issues: data.List,
+          selectedIssue: data.issue,
+        });
       }
     } catch (err) {
       console.error(err);
@@ -104,19 +115,16 @@ console.log(err)
   }
 
   async closeIssue(index) {
+    const { showSuccess, showError } = this.props;
     const query = `mutation issueClose($id:Int!){
     issueUpdate(id:$id,changes:{status:Closed}){
       id title status owner effort created due description
     }
   }`;
     const { issues } = this.state;
-    const data = await graphQLFetch(
-      query,
-      { id: issues[index].id },
-      this.showError
-    );
+    const data = await graphQLFetch(query, { id: issues[index].id }, showError);
     if (data) {
-      this.setState(prevState => {
+      this.setState((prevState) => {
         const newList = [...prevState.issues];
         newList[index] = data.issueUpdate;
         return { issues: newList };
@@ -127,18 +135,19 @@ console.log(err)
   }
 
   async deleteIssue(index) {
+    const { showSuccess, showError } = this.props;
     const query = `mutation issueDelete($id:Int!){
     issueDelete(id:$id)
   }`;
     const { issues } = this.state;
     const {
       location: { pathname, search },
-      history
+      history,
     } = this.props;
     const { id } = issues[index];
-    const data = await graphQLFetch(query, { id }, this.showError);
+    const data = await graphQLFetch(query, { id }, showError);
     if (data && data.issueDelete) {
-      this.setState(prevState => {
+      this.setState((prevState) => {
         const newList = [...prevState.issues];
         if (pathname === `/issues/${id}`) {
           history.push({ pathname: "/issues", search });
@@ -146,41 +155,20 @@ console.log(err)
         newList.splice(index, 1);
         return { issues: newList };
       });
-      this.showSuccess(`Deleted issue ${id} successfully`);
+      showSuccess(`Deleted issue ${id} successfully`);
     } else {
       this.loadData();
     }
   }
 
-  showSuccess(message) {
-    this.setState({
-      toastVisible: true,
-      toastMessage: message,
-      toastType: "success"
-    });
-  }
-  showError(message) {
-    this.setState({
-      toastVisible: true,
-      toastMessage: message,
-      toastType: "danger"
-    });
-  }
-
-  dismissToast() {
-    this.setState({
-      toastVisible: false
-    });
-  }
-
   render() {
-    const {issues} = this.state;
-    if(issues == null) return null;
+    const { issues } = this.state;
+    if (issues == null) return null;
     const { selectedIssue } = this.state;
     const style = {
-      margin: 30
+      margin: 30,
     };
-    const { toastVisible, toastType, toastMessage } = this.state;
+
     const hasFilter = location.search !== "";
     return (
       <div id="all">
@@ -189,7 +177,7 @@ console.log(err)
             <Panel.Title toggle>Filter</Panel.Title>
           </Panel.Heading>
           <Panel.Body collapsible>
-            <IssueFilter />
+            <IssueFilter urlBase="/issues" />
           </Panel.Body>
         </Panel>
 
@@ -201,16 +189,12 @@ console.log(err)
           deleteIssue={this.deleteIssue}
         />
         <hr />
-       <IssueDetail issue={selectedIssue} />
-        <IssueReport />
-        <Toast
-          showing={toastVisible}
-          onDismiss={this.dismissToast}
-          bsStyle={toastType}
-        >
-          {toastMessage}
-        </Toast>
+        <IssueDetail issue={selectedIssue} />
       </div>
     );
   }
 }
+
+const IssueListWithToast = withToast(IssueList);
+IssueListWithToast.fetchData = IssueList.fetchData;
+export default IssueListWithToast;

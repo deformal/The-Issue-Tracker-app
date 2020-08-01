@@ -9,24 +9,25 @@ const resolvers = {
   Query: {
     about: about.getMessage,
     List: issues.list,
-    issue: issues.get
+    issue: issues.get,
+    issueCounts: issues.counts,
   },
   Mutation: {
     setAboutMessage: about.setMessage,
     issueAdd: issues.add,
     issueUpdate: issues.update,
-    issueDelete: issues.removing
+    issueDelete: issues.removing,
   },
-  GraphQLDate
+  GraphQLDate,
 };
 
 const server = new ApolloServer({
   typeDefs: fs.readFileSync("schema.graphql", "utf-8"),
   resolvers,
-  formatError: error => {
+  formatError: (error) => {
     console.log(error);
     return error;
-  }
+  },
 });
 
 function installHandler(app) {

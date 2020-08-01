@@ -10,7 +10,7 @@ import {
   ControlLabel,
   InputGroup,
   Row,
-  Col
+  Col,
 } from "react-bootstrap";
 
 class IssueFilter extends React.Component {
@@ -21,7 +21,7 @@ class IssueFilter extends React.Component {
       status: params.get("status") || "",
       effortMin: params.get("effortMin") || "",
       effortMax: params.get("effortMax") || "",
-      changed: false
+      changed: false,
     };
     this.onChangeStatus = this.onChangeStatus.bind(this);
     this.onChangeEffortMin = this.onChangeEffortMin.bind(this);
@@ -32,10 +32,10 @@ class IssueFilter extends React.Component {
 
   componentDidUpdate(prevProps) {
     const {
-      location: { search: prevSearch }
+      location: { search: prevSearch },
     } = prevProps;
     const {
-      location: { search }
+      location: { search },
     } = this.props;
     if (prevSearch !== search) {
       this.showOtiginalFilter();
@@ -60,30 +60,30 @@ class IssueFilter extends React.Component {
 
   showOriginalFilter() {
     const {
-      location: { search }
+      location: { search },
     } = this.props;
     const params = new URLSearchParams(search);
     this.setState({
       status: params.get("status") || "",
       effortMin: params.get("effortMin") || "",
       effortMax: params.get("effrotMax") || "",
-      changed: false
+      changed: false,
     });
   }
   applyFilter() {
     const { status, effortMax, effortMin } = this.state;
-    const { history } = this.props;
+    const { history, urlBase } = this.props;
     const params = new URLSearchParams();
     if (status) params.set("status", status);
     if (effortMin) params.set("effortMin", effortMin);
     if (effortMax) params.set("effortMax", effortMax);
     const search = params.toString() ? `?${params.toString()}` : "";
-    history.push({ pathname: "/issues", search });
+    history.push({ pathname: urlBase, search });
   }
 
   render() {
     const {
-      location: { search }
+      location: { search },
     } = this.props; //the value of the location parameter i.e search will be accessed here in search.
     const params = new URLSearchParams(search); //now search is passed here.
     const { status, changed } = this.state;

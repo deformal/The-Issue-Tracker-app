@@ -19,6 +19,14 @@ type Issue {
   description: String
 }
 
+type IssueCounts {
+  owner: String!
+  New: Int
+  Assigned: Int
+  Fixed: Int
+  Closed: Int
+}
+
 input Deletions {
   id: Int!
 }
@@ -47,8 +55,23 @@ input IssueUpdateInputs {
 type Query {
   about: String!
   name: String!
-  List(status: StatusType, effortMin: Int, effortMax: Int): [Issue!]!
+  List(
+    status: StatusType
+    effortMin: Int
+    effortMax: Int
+    page: Int = 1
+  ): IssueListWithPages
   issue(id: Int!): Issue!
+  issueCounts(
+    status: StatusType
+    effortMin: Int
+    effortMax: Int
+  ): [IssueCounts!]!
+}
+
+type IssueListWithPages {
+  issues: [Issues!]!
+  pages: Int
 }
 
 type Mutation {
