@@ -59,7 +59,7 @@ type Query {
     status: StatusType
     effortMin: Int
     effortMax: Int
-    page: Int = 1
+    page: Int
   ): IssueListWithPages
   issue(id: Int!): Issue!
   issueCounts(
@@ -70,7 +70,7 @@ type Query {
 }
 
 type IssueListWithPages {
-  issues: [Issues!]!
+  issues: [Issue!]!
   pages: Int
 }
 
@@ -80,4 +80,5 @@ type Mutation {
   issueAdd(issue: IssueInputs!): Issue!
   issueUpdate(id: Int!, changes: IssueUpdateInputs!): Issue!
   issueDelete(id: Int!): Boolean!
+  issueRestore(id: Int!): Boolean!
 }

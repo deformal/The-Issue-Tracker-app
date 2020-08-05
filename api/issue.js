@@ -1,5 +1,7 @@
 const { UserInputError } = require("apollo-server-express");
 const { getDB, getNextSequence, getPrevSequence } = require("./db.js");
+const db = require("./db.js");
+const PAGE_SIZE = 10;
 
 async function get(_, { id }) {
   const db = getDB();
@@ -7,7 +9,7 @@ async function get(_, { id }) {
   return issue;
 }
 
-async function list(_, { status, effortMin, effortMax }) {
+async function list(_, { status, effortMin, effortMax, page }) {
   const db = getDB();
   const filter = {};
   if (status) filter.status = status;
@@ -16,8 +18,17 @@ async function list(_, { status, effortMin, effortMax }) {
     if (effortMin !== undefined) filter.effort.$gte = effortMin;
     if (effortMax !== undefined) filter.effort.$lte = effortMax;
   }
-  const issues = await db.collection("issues").find(filter).toArray();
-  return issues;
+  const cursor = db
+    .collection("issues")
+    .find(filter)
+    .sort({ id: 1 })
+    .skip(PAGE_SIZE * (page - 1))
+    .limit(PAGE_SIZE);
+
+  const totalCount = await cursor.count(false);
+  const issues = cursor.toArray();
+  const pages = Math.ceil(totalCount / PAGE_SIZE);
+  return { issues, pages };
 }
 
 function Validate(issue) {
@@ -71,7 +82,7 @@ async function removing(_, { id }) {
     if (result.insertedId) {
       result = await db.collection("issues").deleteOne({ id });
 
-      const newCount = await db.collection("issues").count();
+      const newCount = await db.collection("issues").countDocuments();
       const cntr = await db
         .collection("counters")
         .updateOne({ _id: "issues" }, { $set: { current: newCount } });
@@ -83,12 +94,25 @@ async function removing(_, { id }) {
     if (result.insertedId) {
       result = await db.collection("issues").deleteOne({ id });
 
-      const newCount = await db.collection("issues").count();
+      const newCount = await db.collection("issues").countDocuments();
       const cntr = await db
         .collection("counters")
         .updateOne({ _id: "issues" }, { $set: { current: newCount } });
       return result.deletedCount === 1;
     }
+  }
+  return false;
+}
+
+async function restore(_, { id }) {
+  const db = getDB();
+  const issue = await db.collection("deleted_issues").findOne({ id });
+  if (!issue) return false;
+  issue.deleted = new Date();
+  let result = await db.collection("issues").insertOne(issue);
+  if (result.insertedId) {
+    reuslt = await db.collection("deleted_issues").removeOne({ id });
+    return result.deletedCount === 1;
   }
   return false;
 }
@@ -125,4 +149,4 @@ async function counts(_, { status, effortMin, effortMax }) {
   return Object.values(stats);
 }
 
-module.exports = { list, add, get, update, removing, counts };
+module.exports = { list, add, get, update, removing, restore, counts };

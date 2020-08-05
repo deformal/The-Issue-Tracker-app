@@ -145,9 +145,14 @@ class IssueEdit extends React.Component {
         params: { id: propsId },
       },
     } = this.props;
+    let x = propsId;
     if (id == null) {
       if (propsId !== null) {
-        return <h3>{`Issue with ID ${propsId} not found.`}</h3>;
+        return (
+          <div>
+            <h3>{`Issue with ID ${propsId} not found.`}</h3>
+          </div>
+        );
       }
 
       return null;

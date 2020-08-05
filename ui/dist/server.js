@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "e82916a1e34d2f993c54";
+/******/ 	var hotCurrentHash = "563bd15d675dfc53b945";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1678,10 +1678,11 @@ class IssueEdit extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         }
       }
     } = this.props;
+    let x = propsId;
 
     if (id == null) {
       if (propsId !== null) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, `Issue with ID ${propsId} not found.`);
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, `Issue with ID ${propsId} not found.`));
       }
 
       return null;
@@ -2054,16 +2055,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _IssueFilter_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./IssueFilter.jsx */ "./src/IssueFilter.jsx");
-/* harmony import */ var _Store_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Store.js */ "./src/Store.js");
-/* harmony import */ var _IssueTable_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./IssueTable.jsx */ "./src/IssueTable.jsx");
-/* harmony import */ var _IssueReport_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./IssueReport.jsx */ "./src/IssueReport.jsx");
-/* harmony import */ var _graphQLFetch_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./graphQLFetch.js */ "./src/graphQLFetch.js");
-/* harmony import */ var _IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./IssueDetail.jsx */ "./src/IssueDetail.jsx");
-/* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! url-search-params */ "url-search-params");
-/* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(url_search_params__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-bootstrap */ "react-bootstrap");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "react-bootstrap");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_router_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-bootstrap */ "react-router-bootstrap");
+/* harmony import */ var react_router_bootstrap__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_router_bootstrap__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Store_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Store.js */ "./src/Store.js");
+/* harmony import */ var _IssueTable_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./IssueTable.jsx */ "./src/IssueTable.jsx");
+/* harmony import */ var _graphQLFetch_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./graphQLFetch.js */ "./src/graphQLFetch.js");
+/* harmony import */ var _IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./IssueDetail.jsx */ "./src/IssueDetail.jsx");
+/* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! url-search-params */ "url-search-params");
+/* harmony import */ var url_search_params__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(url_search_params__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _withToast_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./withToast.jsx */ "./src/withToast.jsx");
+
 
 
 
@@ -2074,11 +2077,29 @@ __webpack_require__.r(__webpack_exports__);
  //the url search parameter are installed in here and are passed to other components
 
 
+const SECTION_SIZE = 5;
 
+function PageLink({
+  params,
+  page,
+  activePage,
+  children
+}) {
+  params.set("page", page);
+  if (page === 0) return react__WEBPACK_IMPORTED_MODULE_0___default.a.cloneElement(children, {
+    disabled: true
+  });
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_bootstrap__WEBPACK_IMPORTED_MODULE_3__["LinkContainer"], {
+    isActive: () => page === activePage,
+    to: {
+      search: `?${params.toString()}`
+    }
+  }, children);
+}
 
 class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   static async fetchData(match, search, showError) {
-    const params = new url_search_params__WEBPACK_IMPORTED_MODULE_7___default.a(search);
+    const params = new url_search_params__WEBPACK_IMPORTED_MODULE_8___default.a(search);
     const vars = {
       hasSelection: false,
       selectedId: 0
@@ -2088,6 +2109,9 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     if (!Number.isNaN(effortMin)) vars.effortMin = effortMin;
     const effortMax = parseInt(params.get("effortMax"), 10);
     if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
+    let page = parseInt(params.get("page"), 10);
+    if (Number.isNaN(page)) page = 1;
+    vars.page = page;
     const {
       params: {
         id
@@ -2106,30 +2130,44 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       $effortMax : Int
       $hasSelection : Boolean!
       $selectedId : Int!
+      $page : Int!
     ){
       List(
         status : $status
         effortMin : $effortMin
         effortMax : $effortMax
+        page: $page
       )
-      {id title status owner created effort due}                                                                                                 
-      issue(id : $selectedId) @include (if : $hasSelection){
-        id description
-      }
+      { 
+        issues
+        {id title status owner created effort due}
+        pages
+      }    
+         
+            issue(id : $selectedId) @include (if : $hasSelection){id description }
     }`;
-    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_5__["default"])(query, vars, showError);
+    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_6__["default"])(query, vars, showError);
     return data;
   }
 
   constructor() {
     super();
-    const issues = _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData ? _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData.List : null;
-    const selectedIssue = _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData ? _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData.issues : null;
-    delete _Store_js__WEBPACK_IMPORTED_MODULE_2__["default"].initialData;
+    const initialData = _Store_js__WEBPACK_IMPORTED_MODULE_4__["default"].initialData || {
+      List: {}
+    };
+    const {
+      List: {
+        issues,
+        pages
+      },
+      issue: selectedIssue
+    } = initialData;
+    delete _Store_js__WEBPACK_IMPORTED_MODULE_4__["default"].initialData;
     this.state = {
       issues,
       selectedIssue,
-      loading: true
+      loading: true,
+      pages
     };
     this.closeIssue = this.closeIssue.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
@@ -2193,8 +2231,9 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
 
       if (data) {
         this.setState({
-          issues: data.List,
-          selectedIssue: data.issue
+          issues: data.List.issues,
+          selectedIssue: data.issue,
+          pages: data.List.pages
         });
       }
     } catch (err) {
@@ -2215,7 +2254,7 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const {
       issues
     } = this.state;
-    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_5__["default"])(query, {
+    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_6__["default"])(query, {
       id: issues[index].id
     }, showError);
 
@@ -2253,7 +2292,7 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const {
       id
     } = issues[index];
-    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_5__["default"])(query, {
+    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_6__["default"])(query, {
       id
     }, showError);
 
@@ -2273,42 +2312,93 @@ class IssueList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
           issues: newList
         };
       });
-      showSuccess(`Deleted issue ${id} successfully`);
+      const undoMessage = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, `Deleted issue${id} successfully.`, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Button"], {
+        bsStyle: "link",
+        onClick: () => this.restoreIssue(id)
+      }, "UNDO"));
+      showSuccess(undoMessage);
     } else {
+      this.loadData();
+    }
+  }
+
+  async restoreIssue(id) {
+    const query = `mutation issueRestore($id:Int!){
+      issueRestore(id:$id)
+    }`;
+    const {
+      showSuccess,
+      showError
+    } = this.props;
+    const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_6__["default"])(query, {
+      id
+    }, showError);
+
+    if (data) {
+      showSuccess(`issue${id} restored  successfully`);
       this.loadData();
     }
   }
 
   render() {
     const {
-      issues
-    } = this.state;
-    if (issues == null) return null;
-    const {
+      issues,
+      pages,
       selectedIssue
     } = this.state;
+    const {
+      location: {
+        search
+      }
+    } = this.props;
+    if (issues == null) return null;
     const style = {
       margin: 30
     };
     const hasFilter = location.search !== "";
+    const params = new url_search_params__WEBPACK_IMPORTED_MODULE_8___default.a(search);
+    let page = parseInt(params.get("page"), 10);
+    if (Number.isNaN(page)) page = 1;
+    const startPage = Math.floor((page - 1) / SECTION_SIZE) * SECTION_SIZE + 1;
+    const endPage = startPage + SECTION_SIZE - 1;
+    const prevSection = startPage === 1 ? 0 : startPage - SECTION_SIZE;
+    const nextSection = endPage >= pages ? 0 : startPage + SECTION_SIZE;
+    const items = [];
+
+    for (let i = startPage; i <= Math.min(endPage, pages); i++) {
+      params.set("page", i);
+      items.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(PageLink, {
+        key: i,
+        params: params,
+        activePage: page,
+        page: i
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Pagination"].Item, null, i)));
+    }
+
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       id: "all"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Panel"], {
       defaultExpanded: hasFilter
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"].Heading, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"].Title, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Panel"].Heading, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Panel"].Title, {
       toggle: true
-    }, "Filter")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["Panel"].Body, {
+    }, "Filter")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Panel"].Body, {
       collapsible: true
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueFilter_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       urlBase: "/issues"
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueTable_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueTable_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       issues: this.state.issues,
       closeIssue: this.closeIssue,
       stat: this.state.Status,
       deleteIssue: this.deleteIssue
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueDetail_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
       issue: selectedIssue
-    }));
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Pagination"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(PageLink, {
+      params: params,
+      page: prevSection
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Pagination"].Item, null, "<")), items, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(PageLink, {
+      params: params,
+      page: nextSection
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Pagination"].Item, null, ">"))));
   }
 
 }
@@ -2856,7 +2946,8 @@ class Toast extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       style: {
         position: "fixed",
         bottom: 20,
-        left: 20
+        left: 20,
+        zIndex: 10
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Alert"], {
       bsStyle: bsStyle,
@@ -2962,7 +3053,7 @@ const routes = [{
   component: _About_jsx__WEBPACK_IMPORTED_MODULE_3__["default"]
 }, {
   path: "*",
-  component: _NotFound_jsx__WEBPACK_IMPORTED_MODULE_4__["default"]
+  component: _IssueList_jsx__WEBPACK_IMPORTED_MODULE_0__["default"]
 }];
 /* harmony default export */ __webpack_exports__["default"] = (routes);
 
