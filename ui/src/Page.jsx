@@ -1,6 +1,7 @@
 import React from "react";
 import Contents from "./Contents.jsx";
 import { LinkContainer } from "react-router-bootstrap";
+import SignInNavItem from "./SignInNavItem.jsx";
 import {
   Navbar,
   Nav,
@@ -8,20 +9,19 @@ import {
   NavDropdown,
   MenuItem,
   Glyphicon,
-  Tooltip,
-  OverlayTrigger,
-  Grid
+  Grid,
+  Col,
 } from "react-bootstrap";
 import IssueAddNavItem from "./IssueAddNavItem.jsx";
-import NavbarHeader from "react-bootstrap/lib/NavbarHeader";
+import Search from "./Search.jsx";
 
 function Header() {
   return (
     <Navbar inverse collapseOnSelect>
-      <NavbarHeader>
+      <Navbar.Header>
         <Navbar.Brand>Issue Tracker</Navbar.Brand>
         <Navbar.Toggle />
-      </NavbarHeader>
+      </Navbar.Header>
       <Navbar.Collapse>
         <Nav>
           <LinkContainer to="/issues">
@@ -31,8 +31,14 @@ function Header() {
             <NavItem>Report</NavItem>
           </LinkContainer>
         </Nav>
+        <Col sm={5}>
+          <Navbar.Form>
+            <Search />
+          </Navbar.Form>
+        </Col>
         <Nav pullRight>
           <IssueAddNavItem />
+          <SignInNavItem />
           <NavDropdown
             id="user-dropdown"
             title={<Glyphicon glyph="option-vertical" />}
@@ -62,7 +68,7 @@ function Footer() {
   );
 }
 
-export default function() {
+export default function () {
   return (
     <div>
       <Header />

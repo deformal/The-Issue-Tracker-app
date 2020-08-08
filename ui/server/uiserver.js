@@ -30,7 +30,7 @@ if (apiProxyTarget) {
     "/graphql",
     proxy({
       target: apiProxyTarget,
-      changeOrigin: true
+      changeOrigin: true,
     })
   );
 }
@@ -42,7 +42,7 @@ if (!process.env.UI_SERVER_API_ENDPOINT) {
   process.env.UI_API_ENDPOINT = process.env.UI_API_ENDPOINT;
 }
 
-app.use(express.static("public"), function(req, res, next) {
+app.use(express.static("public"), function (req, res, next) {
   const env = { UI_API_ENDPOINT: process.env.UI_API_ENDPOINT };
   res.header("Access-Control-Allow-Origin", env); // update to match the domain you will make the request from
   res.header(
@@ -53,7 +53,10 @@ app.use(express.static("public"), function(req, res, next) {
 });
 
 app.get("/env.js", (req, res) => {
-  const env = { UI_API_ENDPOINT: process.env.UI_API_ENDPOINT };
+  const env = {
+    UI_API_ENDPOINT: process.env.UI_API_ENDPOINT,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  };
   res.send(`window.ENV = ${JSON.stringify(env)}`);
   console.log(res.headersSent);
 });
@@ -61,7 +64,7 @@ app.get("/env.js", (req, res) => {
 app.get("*", (req, res, next) => {
   render(req, res, next);
 });
-app.listen(port, function() {
+app.listen(port, function () {
   console.log(`ui server started on port ${port}`);
 });
 if (module.hot) {

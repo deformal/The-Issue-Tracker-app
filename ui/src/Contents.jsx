@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import routes from "./routes.js";
 
 const notFound = () => {
@@ -9,7 +9,7 @@ const notFound = () => {
 export default function Contents() {
   return (
     <Switch>
-      {routes.map(attrs => (
+      {routes.map((attrs) => (
         <Route {...attrs} key={attrs.path} />
       ))}
     </Switch>

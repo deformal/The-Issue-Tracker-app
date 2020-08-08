@@ -16,9 +16,9 @@ async function graphQLFetch(query, variables = {}, showError = null) {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "http://localhost:8000/",
         "Access-Control-Allow-Headers":
-          "Origin, X-Requested-With, Content-Type, Accept"
+          "Origin, X-Requested-With, Content-Type, Accept",
       },
-      body: JSON.stringify({ query, variables })
+      body: JSON.stringify({ query, variables }),
     });
     const body = await response.text();
     const result = JSON.parse(body, jsonDateReviver);

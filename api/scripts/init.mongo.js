@@ -10,7 +10,7 @@ const issuesDB = [
     due: new Date("2020-03-12"),
     title: "Error in console when clicking ADD",
     description:
-      "When the add button is clicked there is an error in the console which shows that there is no function attached to it. Why? this is just not normal as there is a function that is assigned to the button"
+      "When the add button is clicked there is an error in the console which shows that there is no function attached to it. Why? this is just not normal as there is a function that is assigned to the button",
   },
   {
     id: 2,
@@ -21,8 +21,8 @@ const issuesDB = [
     due: new Date("2020-03-20"),
     title: "Missing bottom border on the panel",
     description:
-      "The bottom border of the ui panel is missing and there is no way to see the status of the current active file"
-  }
+      "The bottom border of the ui panel is missing and there is no way to see the status of the current active file",
+  },
 ];
 db.issues.insertMany(issuesDB);
 const count = db.issues.count();
@@ -33,4 +33,5 @@ db.issues.createIndex({ id: 1 }, { unique: true });
 db.issues.createIndex({ status: 1 });
 db.issues.createIndex({ owner: 1 });
 db.issues.createIndex({ created: 1 });
+db.issues.createIndex({ title: "text", description: "text" });
 db.deleted_issues.createIndex({ id: 1 }, { unique: true });

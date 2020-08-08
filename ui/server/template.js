@@ -1,6 +1,5 @@
-import serialize from 'serialize-javascript'
+import serialize from "serialize-javascript";
 export default function template(body, data) {
-  
   return `<html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,6 +7,7 @@ export default function template(body, data) {
     <!--react terminologies api-->
     <title>React App with a server and seperate jsx file</title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <script src="https://apis.google.com/js/api:client.js"></script>
     <style>
       .panel-title a {
         display: block;
@@ -26,6 +26,7 @@ export default function template(body, data) {
     <script src="/env.js"></script>
     <script src="/app.bundle.js"></script>
     <script src="/vendor.bundle.js"></script>
+    
    
     
   </body>
