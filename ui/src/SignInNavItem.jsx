@@ -15,10 +15,6 @@ class SignInNavItem extends React.Component {
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
   }
-  signIn() {
-    this.hideModal();
-    this.setState({ user: { signedIn: true, givenName: "User1" } });
-  }
 
   signOut() {
     this.setState({ user: { signedIn: false, givenName: "" } });
@@ -46,15 +42,28 @@ class SignInNavItem extends React.Component {
   async signIn() {
     this.hideModal();
     const { showError } = this.props;
+    let googleToken;
     try {
       const auth2 = window.gapi.auth2.getAuthInstance();
       const googleUser = await auth2.signIn();
-      //      const givenName = googleUser.getBasicProfile().getGivenName();
-      const givenName = googleUser.getBasicProfile().getImageUrl();
-      this.setState({ user: { signedIn: true, givenName } });
-      console.log(givenName);
+      googleToken = googleUser.getAuthResponse().id_token;
     } catch (error) {
       showError(`Error authenticating with Google:${error.error}`);
+    }
+    try {
+      const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
+      const response = await fetch(`${apiEndpoint}/signin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ google_token: googleToken }),
+      });
+      const body = await response.text();
+      const result = JSON.parse(body);
+      console.log({ result });
+      const { signedIn, givenName } = result;
+      this.setState({ user: { signedIn, givenName } });
+    } catch (error) {
+      showError(`Error signing into the app: ${error}`);
     }
   }
 

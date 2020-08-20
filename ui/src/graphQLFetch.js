@@ -17,6 +17,7 @@ async function graphQLFetch(query, variables = {}, showError = null) {
         "Access-Control-Allow-Origin": "http://localhost:8000/",
         "Access-Control-Allow-Headers":
           "Origin, X-Requested-With, Content-Type, Accept",
+        SameSite: "None",
       },
       body: JSON.stringify({ query, variables }),
     });

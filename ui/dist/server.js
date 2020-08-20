@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "7c0cf94fce39110bb215";
+/******/ 	var hotCurrentHash = "ed9739401a8b31fa6a6a";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1012,11 +1012,8 @@ function template(body, data) {
     <div id="contents">${body}</div>
     <script>window._INITIAL_DATA_ = ${serialize_javascript__WEBPACK_IMPORTED_MODULE_0___default()(data)}</script>
     <script src="/env.js"></script>
-    <script src="/app.bundle.js"></script>
     <script src="/vendor.bundle.js"></script>
-    
-   
-    
+    <script src="/app.bundle.js"></script>
   </body>
 </html>
 `;
@@ -1035,23 +1032,20 @@ function template(body, data) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var dotenv__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dotenv */ "dotenv");
 /* harmony import */ var dotenv__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dotenv__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! path */ "path");
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! express */ "express");
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var http_proxy_middleware__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! http-proxy-middleware */ "http-proxy-middleware");
-/* harmony import */ var http_proxy_middleware__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(http_proxy_middleware__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var source_map_support__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! source-map-support */ "source-map-support");
-/* harmony import */ var source_map_support__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(source_map_support__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _render_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./render.jsx */ "./server/render.jsx");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var http_proxy_middleware__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! http-proxy-middleware */ "http-proxy-middleware");
+/* harmony import */ var http_proxy_middleware__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(http_proxy_middleware__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var source_map_support__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! source-map-support */ "source-map-support");
+/* harmony import */ var source_map_support__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(source_map_support__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _render_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./render.jsx */ "./server/render.jsx");
 
 
 
 
 
-
-const app = express__WEBPACK_IMPORTED_MODULE_2___default()();
-source_map_support__WEBPACK_IMPORTED_MODULE_4___default.a.install();
+const app = express__WEBPACK_IMPORTED_MODULE_1___default()();
+source_map_support__WEBPACK_IMPORTED_MODULE_3___default.a.install();
 dotenv__WEBPACK_IMPORTED_MODULE_0___default.a.config();
 const port = process.env.UI_SERVER_PORT;
 
@@ -1078,9 +1072,12 @@ if (enableHMR && "development" !== "production") {
 }
 
 if (apiProxyTarget) {
-  app.use("/graphql", http_proxy_middleware__WEBPACK_IMPORTED_MODULE_3___default()({
+  app.use("/graphql", http_proxy_middleware__WEBPACK_IMPORTED_MODULE_2___default()({
     target: apiProxyTarget,
     changeOrigin: true
+  }));
+  app.use("/auth", http_proxy_middleware__WEBPACK_IMPORTED_MODULE_2___default()({
+    target: apiProxyTarget
   }));
 }
 
@@ -1092,7 +1089,11 @@ if (!process.env.UI_SERVER_API_ENDPOINT) {
   process.env.UI_API_ENDPOINT = process.env.UI_API_ENDPOINT;
 }
 
-app.use(express__WEBPACK_IMPORTED_MODULE_2___default.a.static("public"), function (req, res, next) {
+if (!process.env.UI_AUTH_ENDPOINT) {
+  process.env.UI_AUTH_ENDPOINT = "http://localhost:2000/auth";
+}
+
+app.use(express__WEBPACK_IMPORTED_MODULE_1___default.a.static("public"), function (req, res, next) {
   const env = {
     UI_API_ENDPOINT: process.env.UI_API_ENDPOINT
   };
@@ -1104,20 +1105,21 @@ app.use(express__WEBPACK_IMPORTED_MODULE_2___default.a.static("public"), functio
 app.get("/env.js", (req, res) => {
   const env = {
     UI_API_ENDPOINT: process.env.UI_API_ENDPOINT,
+    UI_AUTH_ENDPOINT: process.env.UI_AUTH_ENDPOINT,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID
   };
   res.send(`window.ENV = ${JSON.stringify(env)}`);
   console.log(res.headersSent);
 });
 app.get("*", (req, res, next) => {
-  Object(_render_jsx__WEBPACK_IMPORTED_MODULE_5__["default"])(req, res, next);
+  Object(_render_jsx__WEBPACK_IMPORTED_MODULE_4__["default"])(req, res, next);
 });
 app.listen(port, function () {
   console.log(`ui server started on port ${port}`);
 });
 
 if (true) {
-  module.hot.accept(/*! ./render.jsx */ "./server/render.jsx", function() { /* harmony import */ _render_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./render.jsx */ "./server/render.jsx");
+  module.hot.accept(/*! ./render.jsx */ "./server/render.jsx", function() { /* harmony import */ _render_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./render.jsx */ "./server/render.jsx");
  });
 }
 
@@ -2833,14 +2835,13 @@ function Footer() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_select_lib_Async__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-select/lib/Async */ "react-select/lib/Async");
-/* harmony import */ var react_select_lib_Async__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_select_lib_Async__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_select_lib_Async_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-select/lib/Async.js */ "react-select/lib/Async.js");
+/* harmony import */ var react_select_lib_Async_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_select_lib_Async_js__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "react-router-dom");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_router_dom__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _graphQLFetch_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./graphQLFetch.js */ "./src/graphQLFetch.js");
 /* harmony import */ var _withToast_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./withToast.jsx */ "./src/withToast.jsx");
 
- // eslint-disable-line
 
 
 
@@ -2882,7 +2883,7 @@ class Search extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select_lib_Async__WEBPACK_IMPORTED_MODULE_1___default.a, {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select_lib_Async_js__WEBPACK_IMPORTED_MODULE_1___default.a, {
       instanceId: "search-select",
       value: "",
       loadOptions: this.loadOptions,
@@ -2935,16 +2936,6 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
     this.hideModal = this.hideModal.bind(this);
   }
 
-  signIn() {
-    this.hideModal();
-    this.setState({
-      user: {
-        signedIn: true,
-        givenName: "User1"
-      }
-    });
-  }
-
   signOut() {
     this.setState({
       user: {
@@ -2987,21 +2978,44 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
     const {
       showError
     } = this.props;
+    let googleToken;
 
     try {
       const auth2 = window.gapi.auth2.getAuthInstance();
-      const googleUser = await auth2.signIn(); //      const givenName = googleUser.getBasicProfile().getGivenName();
+      const googleUser = await auth2.signIn();
+      googleToken = googleUser.getAuthResponse().id_token;
+    } catch (error) {
+      showError(`Error authenticating with Google:${error.error}`);
+    }
 
-      const givenName = googleUser.getBasicProfile().getImageUrl();
+    try {
+      const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
+      const response = await fetch(`${apiEndpoint}/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          google_token: googleToken
+        })
+      });
+      const body = await response.text();
+      const result = JSON.parse(body);
+      console.log({
+        result
+      });
+      const {
+        signedIn,
+        givenName
+      } = result;
       this.setState({
         user: {
-          signedIn: true,
+          signedIn,
           givenName
         }
       });
-      console.log(givenName);
     } catch (error) {
-      showError(`Error authenticating with Google:${error.error}`);
+      showError(`Error signing into the app: ${error}`);
     }
   }
 
@@ -3247,7 +3261,8 @@ async function graphQLFetch(query, variables = {}, showError = null) {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "http://localhost:8000/",
-        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        SameSite: "None"
       },
       body: JSON.stringify({
         query,
@@ -3608,14 +3623,14 @@ module.exports = require("react-router-dom");
 
 /***/ }),
 
-/***/ "react-select/lib/Async":
-/*!*****************************************!*\
-  !*** external "react-select/lib/Async" ***!
-  \*****************************************/
+/***/ "react-select/lib/Async.js":
+/*!********************************************!*\
+  !*** external "react-select/lib/Async.js" ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = require("react-select/lib/Async");
+module.exports = require("react-select/lib/Async.js");
 
 /***/ }),
 

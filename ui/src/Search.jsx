@@ -1,5 +1,5 @@
 import React from "react";
-import SelectAsync from "react-select/lib/Async"; // eslint-disable-line
+import SelectAsync from "react-select/lib/Async.js";
 import { withRouter } from "react-router-dom";
 
 import graphQLFetch from "./graphQLFetch.js";
