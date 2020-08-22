@@ -3,8 +3,10 @@ require("dotenv").config();
 const { connectingDB } = require("./db.js");
 const { installHandler } = require("./api_handler.js");
 const auth = require("./auth.js");
+const cookieParser = require("cookie-parser");
 
 const app = express();
+app.use(cookieParser());
 app.use("/auth", auth.routes);
 
 installHandler(app);

@@ -36,15 +36,6 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
     this.hideModal = this.hideModal.bind(this);
   }
 
-  signOut() {
-    this.setState({
-      user: {
-        signedIn: false,
-        givenName: ""
-      }
-    });
-  }
-
   showModal() {
     this.setState({
       showing: true
@@ -57,7 +48,7 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
     });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const clientId = window.ENV.GOOGLE_CLIENT_ID;
     if (!clientId) return;
     window.gapi.load("auth2", () => {
@@ -69,6 +60,26 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
             disabled: false
           });
         });
+      }
+    });
+    await this.loadData();
+  }
+
+  async loadData() {
+    const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
+    const response = await fetch(`${apiEndpoint}/user`, {
+      method: "POST"
+    });
+    const body = await response.text();
+    const result = JSON.parse(body);
+    const {
+      signedIn,
+      givenName
+    } = result;
+    this.setState({
+      user: {
+        signedIn,
+        givenName
       }
     });
   }
@@ -101,6 +112,9 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       });
       const body = await response.text();
       const result = JSON.parse(body);
+      console.log({
+        result
+      });
       const {
         signedIn,
         givenName
@@ -113,6 +127,30 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       });
     } catch (error) {
       showError(`Error signing into the app: ${error}`);
+    }
+  }
+
+  async signOut() {
+    const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
+    const {
+      showError
+    } = this.props;
+
+    try {
+      await fetch(`${apiEndpoint}/singout`, {
+        method: "POST",
+        credentials: "true"
+      });
+      const auth2 = window.gapi.auth2.getAuthInstance();
+      await auth2.signOut();
+      this.setState({
+        user: {
+          signedIn: false,
+          givenName: ""
+        }
+      });
+    } catch (error) {
+      showError(`Error signing out :${error}`);
     }
   }
 
@@ -143,16 +181,7 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
 
     if (user.signedIn) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["NavDropdown"], {
-        title: react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-          className: "thumbnail-image",
-          src: user.givenName,
-          style: {
-            height: 25,
-            widht: 25,
-            borderRadius: 100
-          },
-          alt: "Sign In"
-        }),
+        title: user.givenName,
         id: "user"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["MenuItem"], {
         onClick: this.signOut
@@ -188,4 +217,4 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
 /***/ })
 
 };
-//# sourceMappingURL=server.9fee4938652f5666a026.hot-update.js.map
+//# sourceMappingURL=server.815a085c957c4df1f19e.hot-update.js.map

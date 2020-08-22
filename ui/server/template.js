@@ -24,8 +24,9 @@ export default function template(body, data) {
     <div id="contents">${body}</div>
     <script>window._INITIAL_DATA_ = ${serialize(data)}</script>
     <script src="/env.js"></script>
-    <script src="/vendor.bundle.js"></script>
     <script src="/app.bundle.js"></script>
+    <script src="/vendor.bundle.js"></script>
+    
   </body>
 </html>
 `;
