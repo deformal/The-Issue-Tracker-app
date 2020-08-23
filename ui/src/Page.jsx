@@ -2,6 +2,7 @@ import React from "react";
 import Contents from "./Contents.jsx";
 import { LinkContainer } from "react-router-bootstrap";
 import SignInNavItem from "./SignInNavItem.jsx";
+import UserContext from "./UserContext.js";
 import {
   Navbar,
   Nav,
@@ -93,7 +94,9 @@ export default class Page extends React.Component {
       <div>
         <Header user={user} onUserChange={this.onUserChange} />
         <Grid fluid>
-          <Contents />
+          <UserContext.Provider value={user}>
+            <Contents />
+          </UserContext.Provider>
         </Grid>
 
         <Footer />

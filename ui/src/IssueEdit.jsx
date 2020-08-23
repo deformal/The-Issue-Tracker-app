@@ -7,6 +7,7 @@ import TextInput from "./TextInput.jsx";
 import Toast from "./Toast.jsx";
 import Store from "./Store.js";
 import withToast from "./withToast.jsx";
+import UserContext from "./UserContext.js";
 
 import {
   Button,
@@ -178,6 +179,8 @@ class IssueEdit extends React.Component {
       issue: { created, due },
     } = this.state;
 
+    const user = this.context;
+
     return (
       <Panel>
         <Panel.Heading>
@@ -299,7 +302,11 @@ class IssueEdit extends React.Component {
               <Col smOffset={2} sm={6} componentClass={ControlLabel}>
                 <ButtonToolbar>
                   <ButtonGroup>
-                    <Button bsStyle="primary" type="submit">
+                    <Button
+                      bsStyle="primary"
+                      type="submit"
+                      disabled={!user.signedIn}
+                    >
                       Submit
                     </Button>
                     <LinkContainer to="/issues">
@@ -330,6 +337,7 @@ class IssueEdit extends React.Component {
     return null;
   }
 }
+IssueEdit.contextType = UserContext;
 const IssueEditWithToast = withToast(IssueEdit);
 IssueEditWithToast.fetchData = IssueEdit.fetchData;
 export default IssueEditWithToast;

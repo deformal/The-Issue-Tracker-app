@@ -5,22 +5,24 @@ import {
   Button,
   Tooltip,
   OverlayTrigger,
-  Table
+  Table,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-function IssueTable(props) {
+import UserContext from "./UserContext.js";
+
+export default function IssueTable(props) {
   //local variables
   const issueRows = props.issues.map((issue, index) => (
     <IssueRow
       key={issue.id}
-      ix={issue}
+      issue={issue}
       closeIssue={props.closeIssue}
       deleteIssue={props.deleteIssue}
       index={index}
     />
   ));
   const Tablecollapse = {
-    textAlign: "center"
+    textAlign: "center",
   };
 
   return (
@@ -44,9 +46,18 @@ function IssueTable(props) {
   );
 }
 
-const IssueRow = withRouter(
-  ({ ix, location: { search }, closeIssue, index, deleteIssue }) => {
-    const selectLocation = { pathname: `/issues/${ix.id}`, search };
+class IssueRowPlain extends React.Component {
+  render() {
+    const {
+      issue,
+      location: { search },
+      closeIssue,
+      deleteIssue,
+      index,
+    } = this.props;
+    const user = this.context;
+    const disabled = !user.signedIn;
+    const selectLocation = { pathname: `/issues/${issue.id}`, search };
     const editTooltip = (
       <Tooltip id="close-tooltip" placement="top">
         Edit
@@ -72,15 +83,15 @@ const IssueRow = withRouter(
     }
     const tableRow = (
       <tr>
-        <td>{ix.id}</td>
-        <td>{ix.status}</td>
-        <td>{ix.owner}</td>
-        <td>{ix.created.toDateString()}</td>
-        <td>{ix.effort}</td>
-        <td>{ix.due ? ix.due.toDateString() : ""}</td>
-        <td>{ix.title}</td>
+        <td>{issue.id}</td>
+        <td>{issue.status}</td>
+        <td>{issue.owner}</td>
+        <td>{issue.created.toDateString()}</td>
+        <td>{issue.effort}</td>
+        <td>{issue.due ? issue.due.toDateString() : ""}</td>
+        <td>{issue.title}</td>
         <td>
-          <LinkContainer to={`/edit/${ix.id}`}>
+          <LinkContainer to={`/edit/${issue.id}`}>
             <OverlayTrigger delayShow={1000} overlay={editTooltip}>
               <Button bsSize="xsmall">
                 <Glyphicon glyph="edit" />
@@ -89,14 +100,24 @@ const IssueRow = withRouter(
           </LinkContainer>
           {"  |  "}
           <OverlayTrigger delayShow={200} overlay={closeTooltip}>
-            <Button bsSize="xsmall" type="button" onClick={onClose}>
+            <Button
+              disabled={disabled}
+              bsSize="xsmall"
+              type="button"
+              onClick={onClose}
+            >
               <Glyphicon glyph="remove" />
             </Button>
           </OverlayTrigger>
 
           {"  |  "}
           <OverlayTrigger delayShow={200} overlay={deleteTooltip}>
-            <Button bsSize="xsmall" type="button" onClick={onDelete}>
+            <Button
+              disabled={disabled}
+              bsSize="xsmall"
+              type="button"
+              onClick={onDelete}
+            >
               <Glyphicon glyph="trash" />
             </Button>
           </OverlayTrigger>
@@ -105,5 +126,7 @@ const IssueRow = withRouter(
     );
     return <LinkContainer to={selectLocation}>{tableRow}</LinkContainer>;
   }
-);
-export default IssueTable;
+}
+IssueRowPlain.contextType = UserContext;
+const IssueRow = withRouter(IssueRowPlain);
+delete IssueRow.contextType;
