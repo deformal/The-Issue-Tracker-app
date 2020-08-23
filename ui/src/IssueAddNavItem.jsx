@@ -49,7 +49,7 @@ class IssueAddNavItem extends React.Component {
                      id
                    }
                     }`;
-    const data = await graphQLFetch(query, { issue }, this.showError);
+    const data = await graphQLFetch(query, { issue }, showError);
     if (data) {
       const { history } = this.props;
       history.push(`/edit/${data.issueAdd.id}`);
@@ -57,10 +57,13 @@ class IssueAddNavItem extends React.Component {
   }
   render() {
     const { showing } = this.state;
+    const {
+      user: { signedIn },
+    } = this.props;
 
     return (
       <React.Fragment>
-        <NavItem onClick={this.showModal}>
+        <NavItem onClick={this.showModal} disabled={!signedIn}>
           <OverlayTrigger
             placement="left"
             delayShow={1000}

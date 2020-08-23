@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "a9c823ba14b4b4aa228b";
+/******/ 	var hotCurrentHash = "6ce3cbd67906b8fa5a0f";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1100,7 +1100,7 @@ app.use(express__WEBPACK_IMPORTED_MODULE_1___default.a.static("public"), functio
   };
   res.header("Access-Control-Allow-Origin", env); // update to match the domain you will make the request from
 
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept", "Same-Site");
   next();
 });
 app.get("/env.js", (req, res) => {
@@ -1388,7 +1388,7 @@ class IssueAddNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compo
                     }`;
     const data = await Object(_graphQLFetch_js__WEBPACK_IMPORTED_MODULE_4__["default"])(query, {
       issue
-    }, this.showError);
+    }, showError);
 
     if (data) {
       const {
@@ -1402,8 +1402,14 @@ class IssueAddNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compo
     const {
       showing
     } = this.state;
+    const {
+      user: {
+        signedIn
+      }
+    } = this.props;
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["NavItem"], {
-      onClick: this.showModal
+      onClick: this.showModal,
+      disabled: !signedIn
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["OverlayTrigger"], {
       placement: "left",
       delayShow: 1000,
@@ -2768,6 +2774,7 @@ class NumInput extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Page; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Contents_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Contents.jsx */ "./src/Contents.jsx");
@@ -2786,7 +2793,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function Header() {
+function Header({
+  user,
+  onUserChange
+}) {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Navbar"], {
     inverse: true,
     collapseOnSelect: true
@@ -2798,7 +2808,13 @@ function Header() {
     sm: 5
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Navbar"].Form, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Search_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Nav"], {
     pullRight: true
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueAddNavItem_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SignInNavItem_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NavDropdown"], {
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_IssueAddNavItem_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    user: user,
+    onUserChange: onUserChange
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SignInNavItem_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    user: user,
+    onUserChange: onUserChange
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NavDropdown"], {
     id: "user-dropdown",
     title: react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Glyphicon"], {
       glyph: "option-vertical"
@@ -2817,11 +2833,55 @@ function Footer() {
   }, "Saurabh Jainwal"), " ", "Github Repository"));
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (function () {
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Header, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Grid"], {
-    fluid: true
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Contents_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Footer, null));
-});
+class Page extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: {
+        signedIn: false
+      }
+    };
+    this.onUserChange = this.onUserChange.bind(this);
+  }
+
+  async componentDidMount() {
+    const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
+    const response = await fetch(`${apiEndpoint}/user`, {
+      method: "POST"
+    });
+    const body = await response.text();
+    const result = JSON.parse(body);
+    const {
+      signedIn,
+      givenName
+    } = result;
+    this.setState({
+      user: {
+        signedIn,
+        givenName
+      }
+    });
+  }
+
+  onUserChange(user) {
+    this.setState({
+      user
+    });
+  }
+
+  render() {
+    const {
+      user
+    } = this.state;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Header, {
+      user: user,
+      onUserChange: this.onUserChange
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Grid"], {
+      fluid: true
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Contents_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Footer, null));
+  }
+
+}
 
 /***/ }),
 
@@ -2969,7 +3029,11 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
   async loadData() {
     const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
     const response = await fetch(`${apiEndpoint}/user`, {
-      method: "POST"
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Same-Site": "None"
+      }
     });
     const body = await response.text();
     const result = JSON.parse(body);
@@ -3005,7 +3069,8 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       const response = await fetch(`${apiEndpoint}/signin`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Same-Site": "None"
         },
         body: JSON.stringify({
           google_token: googleToken
@@ -3020,11 +3085,12 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
         signedIn,
         givenName
       } = result;
-      this.setState({
-        user: {
-          signedIn,
-          givenName
-        }
+      const {
+        onUserChange
+      } = this.props;
+      onUserChange({
+        signedIn,
+        givenName
       });
     } catch (error) {
       showError(`Error signing into the app: ${error}`);
@@ -3040,18 +3106,23 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
 
     try {
       await fetch(`${apiEndpoint}/signout`, {
-        method: "POST"
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Same-Site": "None"
+        }
       });
       const auth2 = window.gapi.auth2.getAuthInstance();
       await auth2.signOut();
-      this.setState({
-        user: {
-          signedIn: false,
-          givenName: ""
-        }
+      const {
+        onUserChange
+      } = this.props;
+      onUserChange({
+        signedIn: false,
+        givenName: ""
       });
     } catch (er) {
-      showError(`error signing in ${er}`);
+      showError(`error signing out ${er}`);
     }
   }
 
@@ -3074,7 +3145,7 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
   render() {
     const {
       user
-    } = this.state;
+    } = this.props;
     const {
       showing,
       disabled
@@ -3289,7 +3360,7 @@ async function graphQLFetch(query, variables = {}, showError = null) {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "http://localhost:8000/",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-        SameSite: "None"
+        "Same-Site": "None"
       },
       body: JSON.stringify({
         query,
@@ -3302,13 +3373,11 @@ async function graphQLFetch(query, variables = {}, showError = null) {
     if (result.errors) {
       const error = result.errors[0];
 
-      if (error.extensions.code == "BAD_USER_INPUT") {
+      if (error.extensions.code === "BAD_USER_INPUT") {
         const details = error.extensions.exception.errors.join("\n");
         if (showError) showError(`${error.message}:\n${details}`);
       } else if (showError) {
         showError(`${error.extensions.code}:${error.message}`);
-      } else {
-        alert(`this is the error ${error.message}`);
       }
     }
 

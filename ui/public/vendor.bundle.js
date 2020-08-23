@@ -15000,7 +15000,7 @@ function createReactContext(defaultValue, calculateChangedBits) {
       return _ref = {}, _ref[contextProp] = this.emitter, _ref;
     };
 
-    _proto.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+    _proto.UNSAFE_componentWillReceivePropsProps = function UNSAFE_componentWillReceivePropsProps(nextProps) {
       if (this.props.value !== nextProps.value) {
         var oldValue = this.props.value;
         var newValue = nextProps.value;
@@ -15061,7 +15061,7 @@ function createReactContext(defaultValue, calculateChangedBits) {
 
     var _proto2 = Consumer.prototype;
 
-    _proto2.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+    _proto2.UNSAFE_componentWillReceivePropsProps = function UNSAFE_componentWillReceivePropsProps(nextProps) {
       var observedBits = nextProps.observedBits;
       this.observedBits = observedBits === undefined || observedBits === null ? MAX_SIGNED_31_BIT_INT : observedBits;
     };
@@ -17119,7 +17119,7 @@ function (_React$Component) {
     this.waitForNext();
   };
 
-  _proto.UNSAFE_componentWillReceiveProps = function UNSAFE_componentWillReceiveProps(nextProps) {
+  _proto.UNSAFE_UNSAFE_componentWillReceivePropsProps = function UNSAFE_UNSAFE_componentWillReceivePropsProps(nextProps) {
     // eslint-disable-line
     var activeIndex = this.getActiveIndex();
 
@@ -17537,7 +17537,7 @@ function (_React$Component) {
 
   var _proto = CarouselItem.prototype;
 
-  _proto.UNSAFE_componentWillReceiveProps = function UNSAFE_componentWillReceiveProps(nextProps) {
+  _proto.UNSAFE_UNSAFE_componentWillReceivePropsProps = function UNSAFE_UNSAFE_componentWillReceivePropsProps(nextProps) {
     // eslint-disable-line
     if (this.props.active !== nextProps.active) {
       this.setState({
@@ -26562,7 +26562,7 @@ function (_React$Component) {
     };
   };
 
-  _proto.UNSAFE_componentWillReceiveProps = function UNSAFE_componentWillReceiveProps(nextProps) {
+  _proto.UNSAFE_UNSAFE_componentWillReceivePropsProps = function UNSAFE_UNSAFE_componentWillReceivePropsProps(nextProps) {
     // eslint-disable-line
     if (!nextProps.animation && this.state.activeChild) {
       this.setState({
@@ -40665,7 +40665,7 @@ function recordScheduleUpdate() {
       hasScheduledUpdateInCurrentCommit = true;
     }
 
-    if (currentPhase !== null && currentPhase !== 'componentWillMount' && currentPhase !== 'componentWillReceiveProps') {
+    if (currentPhase !== null && currentPhase !== 'componentWillMount' && currentPhase !== 'UNSAFE_componentWillReceivePropsProps') {
       hasScheduledUpdateInCurrentPhase = true;
     }
   }
@@ -41013,8 +41013,8 @@ function getMaskedContext(workInProgress, unmaskedContext) {
     if (!contextTypes) {
       return emptyContextObject;
     } // Avoid recreating masked context unless unmasked context has changed.
-    // Failing to do this will result in unnecessary calls to componentWillReceiveProps.
-    // This may trigger infinite loops if componentWillReceiveProps calls setState.
+    // Failing to do this will result in unnecessary calls to UNSAFE_componentWillReceivePropsProps.
+    // This may trigger infinite loops if UNSAFE_componentWillReceivePropsProps calls setState.
 
 
     var instance = workInProgress.stateNode;
@@ -41627,8 +41627,8 @@ var ReactStrictModeWarnings = {
 
   var pendingComponentWillMountWarnings = [];
   var pendingUNSAFE_ComponentWillMountWarnings = [];
-  var pendingComponentWillReceivePropsWarnings = [];
-  var pendingUNSAFE_ComponentWillReceivePropsWarnings = [];
+  var pendingUNSAFE_componentWillReceivePropsPropsWarnings = [];
+  var pendingUNSAFE_UNSAFE_componentWillReceivePropsPropsWarnings = [];
   var pendingComponentWillUpdateWarnings = [];
   var pendingUNSAFE_ComponentWillUpdateWarnings = []; // Tracks components we have already warned about.
 
@@ -41649,12 +41649,12 @@ var ReactStrictModeWarnings = {
       pendingUNSAFE_ComponentWillMountWarnings.push(fiber);
     }
 
-    if (typeof instance.componentWillReceiveProps === 'function' && instance.componentWillReceiveProps.__suppressDeprecationWarning !== true) {
-      pendingComponentWillReceivePropsWarnings.push(fiber);
+    if (typeof instance.UNSAFE_componentWillReceivePropsProps === 'function' && instance.UNSAFE_componentWillReceivePropsProps.__suppressDeprecationWarning !== true) {
+      pendingUNSAFE_componentWillReceivePropsPropsWarnings.push(fiber);
     }
 
-    if (fiber.mode & StrictMode && typeof instance.UNSAFE_componentWillReceiveProps === 'function') {
-      pendingUNSAFE_ComponentWillReceivePropsWarnings.push(fiber);
+    if (fiber.mode & StrictMode && typeof instance.UNSAFE_UNSAFE_componentWillReceivePropsProps === 'function') {
+      pendingUNSAFE_UNSAFE_componentWillReceivePropsPropsWarnings.push(fiber);
     }
 
     if (typeof instance.componentWillUpdate === 'function' && instance.componentWillUpdate.__suppressDeprecationWarning !== true) {
@@ -41688,24 +41688,24 @@ var ReactStrictModeWarnings = {
       pendingUNSAFE_ComponentWillMountWarnings = [];
     }
 
-    var componentWillReceivePropsUniqueNames = new Set();
+    var UNSAFE_componentWillReceivePropsPropsUniqueNames = new Set();
 
-    if (pendingComponentWillReceivePropsWarnings.length > 0) {
-      pendingComponentWillReceivePropsWarnings.forEach(function (fiber) {
-        componentWillReceivePropsUniqueNames.add(getComponentName(fiber.type) || 'Component');
+    if (pendingUNSAFE_componentWillReceivePropsPropsWarnings.length > 0) {
+      pendingUNSAFE_componentWillReceivePropsPropsWarnings.forEach(function (fiber) {
+        UNSAFE_componentWillReceivePropsPropsUniqueNames.add(getComponentName(fiber.type) || 'Component');
         didWarnAboutUnsafeLifecycles.add(fiber.type);
       });
-      pendingComponentWillReceivePropsWarnings = [];
+      pendingUNSAFE_componentWillReceivePropsPropsWarnings = [];
     }
 
-    var UNSAFE_componentWillReceivePropsUniqueNames = new Set();
+    var UNSAFE_UNSAFE_componentWillReceivePropsPropsUniqueNames = new Set();
 
-    if (pendingUNSAFE_ComponentWillReceivePropsWarnings.length > 0) {
-      pendingUNSAFE_ComponentWillReceivePropsWarnings.forEach(function (fiber) {
-        UNSAFE_componentWillReceivePropsUniqueNames.add(getComponentName(fiber.type) || 'Component');
+    if (pendingUNSAFE_UNSAFE_componentWillReceivePropsPropsWarnings.length > 0) {
+      pendingUNSAFE_UNSAFE_componentWillReceivePropsPropsWarnings.forEach(function (fiber) {
+        UNSAFE_UNSAFE_componentWillReceivePropsPropsUniqueNames.add(getComponentName(fiber.type) || 'Component');
         didWarnAboutUnsafeLifecycles.add(fiber.type);
       });
-      pendingUNSAFE_ComponentWillReceivePropsWarnings = [];
+      pendingUNSAFE_UNSAFE_componentWillReceivePropsPropsWarnings = [];
     }
 
     var componentWillUpdateUniqueNames = new Set();
@@ -41735,10 +41735,10 @@ var ReactStrictModeWarnings = {
       warningWithoutStack$1(false, 'Using UNSAFE_componentWillMount in strict mode is not recommended and may indicate bugs in your code. ' + 'See https://fb.me/react-unsafe-component-lifecycles for details.\n\n' + '* Move code with side effects to componentDidMount, and set initial state in the constructor.\n' + '\nPlease update the following components: %s', sortedNames);
     }
 
-    if (UNSAFE_componentWillReceivePropsUniqueNames.size > 0) {
-      var _sortedNames = setToSortedString(UNSAFE_componentWillReceivePropsUniqueNames);
+    if (UNSAFE_UNSAFE_componentWillReceivePropsPropsUniqueNames.size > 0) {
+      var _sortedNames = setToSortedString(UNSAFE_UNSAFE_componentWillReceivePropsPropsUniqueNames);
 
-      warningWithoutStack$1(false, 'Using UNSAFE_componentWillReceiveProps in strict mode is not recommended ' + 'and may indicate bugs in your code. ' + 'See https://fb.me/react-unsafe-component-lifecycles for details.\n\n' + '* Move data fetching code or side effects to componentDidUpdate.\n' + "* If you're updating state whenever props change, " + 'refactor your code to use memoization techniques or move it to ' + 'static getDerivedStateFromProps. Learn more at: https://fb.me/react-derived-state\n' + '\nPlease update the following components: %s', _sortedNames);
+      warningWithoutStack$1(false, 'Using UNSAFE_UNSAFE_componentWillReceivePropsProps in strict mode is not recommended ' + 'and may indicate bugs in your code. ' + 'See https://fb.me/react-unsafe-component-lifecycles for details.\n\n' + '* Move data fetching code or side effects to componentDidUpdate.\n' + "* If you're updating state whenever props change, " + 'refactor your code to use memoization techniques or move it to ' + 'static getDerivedStateFromProps. Learn more at: https://fb.me/react-derived-state\n' + '\nPlease update the following components: %s', _sortedNames);
     }
 
     if (UNSAFE_componentWillUpdateUniqueNames.size > 0) {
@@ -41753,10 +41753,10 @@ var ReactStrictModeWarnings = {
       lowPriorityWarningWithoutStack$1(false, 'componentWillMount has been renamed, and is not recommended for use. ' + 'See https://fb.me/react-unsafe-component-lifecycles for details.\n\n' + '* Move code with side effects to componentDidMount, and set initial state in the constructor.\n' + '* Rename componentWillMount to UNSAFE_componentWillMount to suppress ' + 'this warning in non-strict mode. In React 17.x, only the UNSAFE_ name will work. ' + 'To rename all deprecated lifecycles to their new names, you can run ' + '`npx react-codemod rename-unsafe-lifecycles` in your project source folder.\n' + '\nPlease update the following components: %s', _sortedNames3);
     }
 
-    if (componentWillReceivePropsUniqueNames.size > 0) {
-      var _sortedNames4 = setToSortedString(componentWillReceivePropsUniqueNames);
+    if (UNSAFE_componentWillReceivePropsPropsUniqueNames.size > 0) {
+      var _sortedNames4 = setToSortedString(UNSAFE_componentWillReceivePropsPropsUniqueNames);
 
-      lowPriorityWarningWithoutStack$1(false, 'componentWillReceiveProps has been renamed, and is not recommended for use. ' + 'See https://fb.me/react-unsafe-component-lifecycles for details.\n\n' + '* Move data fetching code or side effects to componentDidUpdate.\n' + "* If you're updating state whenever props change, refactor your " + 'code to use memoization techniques or move it to ' + 'static getDerivedStateFromProps. Learn more at: https://fb.me/react-derived-state\n' + '* Rename componentWillReceiveProps to UNSAFE_componentWillReceiveProps to suppress ' + 'this warning in non-strict mode. In React 17.x, only the UNSAFE_ name will work. ' + 'To rename all deprecated lifecycles to their new names, you can run ' + '`npx react-codemod rename-unsafe-lifecycles` in your project source folder.\n' + '\nPlease update the following components: %s', _sortedNames4);
+      lowPriorityWarningWithoutStack$1(false, 'UNSAFE_componentWillReceivePropsProps has been renamed, and is not recommended for use. ' + 'See https://fb.me/react-unsafe-component-lifecycles for details.\n\n' + '* Move data fetching code or side effects to componentDidUpdate.\n' + "* If you're updating state whenever props change, refactor your " + 'code to use memoization techniques or move it to ' + 'static getDerivedStateFromProps. Learn more at: https://fb.me/react-derived-state\n' + '* Rename UNSAFE_componentWillReceivePropsProps to UNSAFE_UNSAFE_componentWillReceivePropsProps to suppress ' + 'this warning in non-strict mode. In React 17.x, only the UNSAFE_ name will work. ' + 'To rename all deprecated lifecycles to their new names, you can run ' + '`npx react-codemod rename-unsafe-lifecycles` in your project source folder.\n' + '\nPlease update the following components: %s', _sortedNames4);
     }
 
     if (componentWillUpdateUniqueNames.size > 0) {
@@ -41811,8 +41811,8 @@ var ReactStrictModeWarnings = {
   ReactStrictModeWarnings.discardPendingWarnings = function () {
     pendingComponentWillMountWarnings = [];
     pendingUNSAFE_ComponentWillMountWarnings = [];
-    pendingComponentWillReceivePropsWarnings = [];
-    pendingUNSAFE_ComponentWillReceivePropsWarnings = [];
+    pendingUNSAFE_componentWillReceivePropsPropsWarnings = [];
+    pendingUNSAFE_UNSAFE_componentWillReceivePropsPropsWarnings = [];
     pendingComponentWillUpdateWarnings = [];
     pendingUNSAFE_ComponentWillUpdateWarnings = [];
     pendingLegacyContextWarning = new Map();
@@ -43319,11 +43319,11 @@ function checkClassInstance(workInProgress, ctor, newProps) {
     var noComponentDidUnmount = typeof instance.componentDidUnmount !== 'function';
     !noComponentDidUnmount ? warningWithoutStack$1(false, '%s has a method called ' + 'componentDidUnmount(). But there is no such lifecycle method. ' + 'Did you mean componentWillUnmount()?', name) : void 0;
     var noComponentDidReceiveProps = typeof instance.componentDidReceiveProps !== 'function';
-    !noComponentDidReceiveProps ? warningWithoutStack$1(false, '%s has a method called ' + 'componentDidReceiveProps(). But there is no such lifecycle method. ' + 'If you meant to update the state in response to changing props, ' + 'use componentWillReceiveProps(). If you meant to fetch data or ' + 'run side-effects or mutations after React has updated the UI, use componentDidUpdate().', name) : void 0;
+    !noComponentDidReceiveProps ? warningWithoutStack$1(false, '%s has a method called ' + 'componentDidReceiveProps(). But there is no such lifecycle method. ' + 'If you meant to update the state in response to changing props, ' + 'use UNSAFE_componentWillReceivePropsProps(). If you meant to fetch data or ' + 'run side-effects or mutations after React has updated the UI, use componentDidUpdate().', name) : void 0;
     var noComponentWillRecieveProps = typeof instance.componentWillRecieveProps !== 'function';
-    !noComponentWillRecieveProps ? warningWithoutStack$1(false, '%s has a method called ' + 'componentWillRecieveProps(). Did you mean componentWillReceiveProps()?', name) : void 0;
+    !noComponentWillRecieveProps ? warningWithoutStack$1(false, '%s has a method called ' + 'componentWillRecieveProps(). Did you mean UNSAFE_componentWillReceivePropsProps()?', name) : void 0;
     var noUnsafeComponentWillRecieveProps = typeof instance.UNSAFE_componentWillRecieveProps !== 'function';
-    !noUnsafeComponentWillRecieveProps ? warningWithoutStack$1(false, '%s has a method called ' + 'UNSAFE_componentWillRecieveProps(). Did you mean UNSAFE_componentWillReceiveProps()?', name) : void 0;
+    !noUnsafeComponentWillRecieveProps ? warningWithoutStack$1(false, '%s has a method called ' + 'UNSAFE_componentWillRecieveProps(). Did you mean UNSAFE_UNSAFE_componentWillReceivePropsProps()?', name) : void 0;
     var hasMutatedProps = instance.props !== newProps;
     !(instance.props === undefined || !hasMutatedProps) ? warningWithoutStack$1(false, '%s(...): When calling super() in `%s`, make sure to pass ' + "up the same props that your component's constructor was passed.", name, name) : void 0;
     var noInstanceDefaultProps = !instance.defaultProps;
@@ -43440,10 +43440,10 @@ function constructClassInstance(workInProgress, ctor, props, renderExpirationTim
         foundWillMountName = 'UNSAFE_componentWillMount';
       }
 
-      if (typeof instance.componentWillReceiveProps === 'function' && instance.componentWillReceiveProps.__suppressDeprecationWarning !== true) {
-        foundWillReceivePropsName = 'componentWillReceiveProps';
-      } else if (typeof instance.UNSAFE_componentWillReceiveProps === 'function') {
-        foundWillReceivePropsName = 'UNSAFE_componentWillReceiveProps';
+      if (typeof instance.UNSAFE_componentWillReceivePropsProps === 'function' && instance.UNSAFE_componentWillReceivePropsProps.__suppressDeprecationWarning !== true) {
+        foundWillReceivePropsName = 'UNSAFE_componentWillReceivePropsProps';
+      } else if (typeof instance.UNSAFE_UNSAFE_componentWillReceivePropsProps === 'function') {
+        foundWillReceivePropsName = 'UNSAFE_UNSAFE_componentWillReceivePropsProps';
       }
 
       if (typeof instance.componentWillUpdate === 'function' && instance.componentWillUpdate.__suppressDeprecationWarning !== true) {
@@ -43497,16 +43497,16 @@ function callComponentWillMount(workInProgress, instance) {
   }
 }
 
-function callComponentWillReceiveProps(workInProgress, instance, newProps, nextContext) {
+function callUNSAFE_componentWillReceivePropsProps(workInProgress, instance, newProps, nextContext) {
   var oldState = instance.state;
-  startPhaseTimer(workInProgress, 'componentWillReceiveProps');
+  startPhaseTimer(workInProgress, 'UNSAFE_componentWillReceivePropsProps');
 
-  if (typeof instance.componentWillReceiveProps === 'function') {
-    instance.componentWillReceiveProps(newProps, nextContext);
+  if (typeof instance.UNSAFE_componentWillReceivePropsProps === 'function') {
+    instance.UNSAFE_componentWillReceivePropsProps(newProps, nextContext);
   }
 
-  if (typeof instance.UNSAFE_componentWillReceiveProps === 'function') {
-    instance.UNSAFE_componentWillReceiveProps(newProps, nextContext);
+  if (typeof instance.UNSAFE_UNSAFE_componentWillReceivePropsProps === 'function') {
+    instance.UNSAFE_UNSAFE_componentWillReceivePropsProps(newProps, nextContext);
   }
 
   stopPhaseTimer();
@@ -43517,7 +43517,7 @@ function callComponentWillReceiveProps(workInProgress, instance, newProps, nextC
 
       if (!didWarnAboutStateAssignmentForComponent.has(componentName)) {
         didWarnAboutStateAssignmentForComponent.add(componentName);
-        warningWithoutStack$1(false, '%s.componentWillReceiveProps(): Assigning directly to ' + "this.state is deprecated (except inside a component's " + 'constructor). Use setState instead.', componentName);
+        warningWithoutStack$1(false, '%s.UNSAFE_componentWillReceivePropsProps(): Assigning directly to ' + "this.state is deprecated (except inside a component's " + 'constructor). Use setState instead.', componentName);
       }
     }
 
@@ -43620,9 +43620,9 @@ function resumeMountClassInstance(workInProgress, ctor, newProps, renderExpirati
   // In order to support react-lifecycles-compat polyfilled components,
   // Unsafe lifecycles should not be invoked for components using the new APIs.
 
-  if (!hasNewLifecycles && (typeof instance.UNSAFE_componentWillReceiveProps === 'function' || typeof instance.componentWillReceiveProps === 'function')) {
+  if (!hasNewLifecycles && (typeof instance.UNSAFE_UNSAFE_componentWillReceivePropsProps === 'function' || typeof instance.UNSAFE_componentWillReceivePropsProps === 'function')) {
     if (oldProps !== newProps || oldContext !== nextContext) {
-      callComponentWillReceiveProps(workInProgress, instance, newProps, nextContext);
+      callUNSAFE_componentWillReceivePropsProps(workInProgress, instance, newProps, nextContext);
     }
   }
 
@@ -43717,9 +43717,9 @@ function updateClassInstance(current, workInProgress, ctor, newProps, renderExpi
   // In order to support react-lifecycles-compat polyfilled components,
   // Unsafe lifecycles should not be invoked for components using the new APIs.
 
-  if (!hasNewLifecycles && (typeof instance.UNSAFE_componentWillReceiveProps === 'function' || typeof instance.componentWillReceiveProps === 'function')) {
+  if (!hasNewLifecycles && (typeof instance.UNSAFE_UNSAFE_componentWillReceivePropsProps === 'function' || typeof instance.UNSAFE_componentWillReceivePropsProps === 'function')) {
     if (oldProps !== newProps || oldContext !== nextContext) {
-      callComponentWillReceiveProps(workInProgress, instance, newProps, nextContext);
+      callUNSAFE_componentWillReceivePropsProps(workInProgress, instance, newProps, nextContext);
     }
   }
 
@@ -57343,7 +57343,7 @@ function componentWillMount() {
   }
 }
 
-function componentWillReceiveProps(nextProps) {
+function UNSAFE_componentWillReceivePropsProps(nextProps) {
   // Call this.constructor.gDSFP to support sub-classes.
   // Use the setState() updater to ensure state isn't stale in certain edge cases.
   function updater(prevState) {
@@ -57374,7 +57374,7 @@ function componentWillUpdate(nextProps, nextState) {
 // React may warn about cWM/cWRP/cWU methods being deprecated.
 // Add a flag to suppress these warnings for this special case.
 componentWillMount.__suppressDeprecationWarning = true;
-componentWillReceiveProps.__suppressDeprecationWarning = true;
+UNSAFE_componentWillReceivePropsProps.__suppressDeprecationWarning = true;
 componentWillUpdate.__suppressDeprecationWarning = true;
 
 function polyfill(Component) {
@@ -57402,10 +57402,10 @@ function polyfill(Component) {
   } else if (typeof prototype.UNSAFE_componentWillMount === 'function') {
     foundWillMountName = 'UNSAFE_componentWillMount';
   }
-  if (typeof prototype.componentWillReceiveProps === 'function') {
-    foundWillReceivePropsName = 'componentWillReceiveProps';
-  } else if (typeof prototype.UNSAFE_componentWillReceiveProps === 'function') {
-    foundWillReceivePropsName = 'UNSAFE_componentWillReceiveProps';
+  if (typeof prototype.UNSAFE_componentWillReceivePropsProps === 'function') {
+    foundWillReceivePropsName = 'UNSAFE_componentWillReceivePropsProps';
+  } else if (typeof prototype.UNSAFE_UNSAFE_componentWillReceivePropsProps === 'function') {
+    foundWillReceivePropsName = 'UNSAFE_UNSAFE_componentWillReceivePropsProps';
   }
   if (typeof prototype.componentWillUpdate === 'function') {
     foundWillUpdateName = 'componentWillUpdate';
@@ -57444,7 +57444,7 @@ function polyfill(Component) {
   // Newer versions of React will ignore these lifecycles if gDSFP exists.
   if (typeof Component.getDerivedStateFromProps === 'function') {
     prototype.componentWillMount = componentWillMount;
-    prototype.componentWillReceiveProps = componentWillReceiveProps;
+    prototype.UNSAFE_componentWillReceivePropsProps = UNSAFE_componentWillReceivePropsProps;
   }
 
   // React <= 16.2 does not support getSnapshotBeforeUpdate.
@@ -57601,7 +57601,7 @@ var Portal = function (_React$Component) {
     this._renderOverlay();
   };
 
-  Portal.prototype.UNSAFE_componentWillReceiveProps = function UNSAFE_componentWillReceiveProps(nextProps) {
+  Portal.prototype.UNSAFE_UNSAFE_componentWillReceivePropsProps = function UNSAFE_UNSAFE_componentWillReceivePropsProps(nextProps) {
     if (this._overlayTarget && nextProps.container !== this.props.container) {
       this._portalContainerNode.removeChild(this._overlayTarget);
       this._portalContainerNode = (0, _getContainer2.default)(nextProps.container, (0, _ownerDocument2.default)(this).body);
@@ -57858,7 +57858,7 @@ var Modal = function (_React$Component) {
     );
   };
 
-  Modal.prototype.UNSAFE_componentWillReceiveProps = function UNSAFE_componentWillReceiveProps(nextProps) {
+  Modal.prototype.UNSAFE_UNSAFE_componentWillReceivePropsProps = function UNSAFE_UNSAFE_componentWillReceivePropsProps(nextProps) {
     if (nextProps.show) {
       this.setState({ exited: false });
     } else if (!nextProps.transition) {
@@ -58527,7 +58527,7 @@ var Overlay = function (_React$Component) {
     return _this;
   }
 
-  Overlay.prototype.UNSAFE_componentWillReceiveProps = function UNSAFE_componentWillReceiveProps(nextProps) {
+  Overlay.prototype.UNSAFE_UNSAFE_componentWillReceivePropsProps = function UNSAFE_UNSAFE_componentWillReceivePropsProps(nextProps) {
     if (nextProps.show) {
       this.setState({ exited: false });
     } else if (!nextProps.transition) {
@@ -58798,7 +58798,7 @@ var Portal = function (_React$Component) {
     }
   };
 
-  Portal.prototype.UNSAFE_componentWillReceiveProps = function UNSAFE_componentWillReceiveProps(nextProps) {
+  Portal.prototype.UNSAFE_UNSAFE_componentWillReceivePropsProps = function UNSAFE_UNSAFE_componentWillReceivePropsProps(nextProps) {
     if (nextProps.container !== this.props.container) {
       this.setContainer(nextProps.container);
     }
@@ -58940,7 +58940,7 @@ var Position = function (_React$Component) {
     this.updatePosition(this.getTarget());
   };
 
-  Position.prototype.UNSAFE_componentWillReceiveProps = function UNSAFE_componentWillReceiveProps() {
+  Position.prototype.UNSAFE_UNSAFE_componentWillReceivePropsProps = function UNSAFE_UNSAFE_componentWillReceivePropsProps() {
     this._needsFlush = true;
   };
 

@@ -15,7 +15,7 @@ import {
 import IssueAddNavItem from "./IssueAddNavItem.jsx";
 import Search from "./Search.jsx";
 
-function Header() {
+function Header({ user, onUserChange }) {
   return (
     <Navbar inverse collapseOnSelect>
       <Navbar.Header>
@@ -37,8 +37,8 @@ function Header() {
           </Navbar.Form>
         </Col>
         <Nav pullRight>
-          <IssueAddNavItem />
-          <SignInNavItem />
+          <IssueAddNavItem user={user} onUserChange={onUserChange} />
+          <SignInNavItem user={user} onUserChange={onUserChange} />
           <NavDropdown
             id="user-dropdown"
             title={<Glyphicon glyph="option-vertical" />}
@@ -68,15 +68,36 @@ function Footer() {
   );
 }
 
-export default function () {
-  return (
-    <div>
-      <Header />
-      <Grid fluid>
-        <Contents />
-      </Grid>
+export default class Page extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { user: { signedIn: false } };
+    this.onUserChange = this.onUserChange.bind(this);
+  }
+  async componentDidMount() {
+    const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
+    const response = await fetch(`${apiEndpoint}/user`, {
+      method: "POST",
+    });
+    const body = await response.text();
+    const result = JSON.parse(body);
+    const { signedIn, givenName } = result;
+    this.setState({ user: { signedIn, givenName } });
+  }
+  onUserChange(user) {
+    this.setState({ user });
+  }
+  render() {
+    const { user } = this.state;
+    return (
+      <div>
+        <Header user={user} onUserChange={this.onUserChange} />
+        <Grid fluid>
+          <Contents />
+        </Grid>
 
-      <Footer />
-    </div>
-  );
+        <Footer />
+      </div>
+    );
+  }
 }

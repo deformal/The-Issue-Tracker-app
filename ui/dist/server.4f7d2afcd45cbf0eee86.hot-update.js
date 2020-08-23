@@ -68,7 +68,11 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
   async loadData() {
     const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
     const response = await fetch(`${apiEndpoint}/user`, {
-      method: "POST"
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Same-Site": "None"
+      }
     });
     const body = await response.text();
     const result = JSON.parse(body);
@@ -104,7 +108,8 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       const response = await fetch(`${apiEndpoint}/signin`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Same-Site": "None"
         },
         body: JSON.stringify({
           google_token: googleToken
@@ -119,11 +124,12 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
         signedIn,
         givenName
       } = result;
-      this.setState({
-        user: {
-          signedIn,
-          givenName
-        }
+      const {
+        onUserChange
+      } = this.props;
+      onUserChange({
+        signedIn,
+        givenName
       });
     } catch (error) {
       showError(`Error signing into the app: ${error}`);
@@ -131,25 +137,31 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
   }
 
   async signOut() {
+    this.hideModal();
     const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
     const {
       showError
     } = this.props;
 
     try {
-      await fetch(`${apiEndpoint}/singout`, {
-        method: "POST"
+      await fetch(`${apiEndpoint}/signout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Same-Site": "None"
+        }
       });
       const auth2 = window.gapi.auth2.getAuthInstance();
       await auth2.signOut();
-      this.setState({
-        user: {
-          signedIn: false,
-          givenName: ""
-        }
+      const {
+        onUserChange
+      } = this.props;
+      onUserChange({
+        signedIn: false,
+        givenName: ""
       });
-    } catch (error) {
-      showError(`Error signing out :${error}`);
+    } catch (er) {
+      showError(`error signing out ${er}`);
     }
   }
 
@@ -172,7 +184,7 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
   render() {
     const {
       user
-    } = this.state;
+    } = this.props;
     const {
       showing,
       disabled
@@ -216,4 +228,4 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
 /***/ })
 
 };
-//# sourceMappingURL=server.8cedd90f5d7a18fefb63.hot-update.js.map
+//# sourceMappingURL=server.4f7d2afcd45cbf0eee86.hot-update.js.map

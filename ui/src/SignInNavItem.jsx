@@ -40,6 +40,7 @@ class SignInNavItem extends React.Component {
     const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
     const response = await fetch(`${apiEndpoint}/user`, {
       method: "POST",
+      headers: { "Content-Type": "application/json", "Same-Site": "None" },
     });
     const body = await response.text();
     const result = JSON.parse(body);
@@ -62,14 +63,15 @@ class SignInNavItem extends React.Component {
       const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
       const response = await fetch(`${apiEndpoint}/signin`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Same-Site": "None" },
         body: JSON.stringify({ google_token: googleToken }),
       });
       const body = await response.text();
       const result = JSON.parse(body);
       console.log({ result });
       const { signedIn, givenName } = result;
-      this.setState({ user: { signedIn, givenName } });
+      const { onUserChange } = this.props;
+      onUserChange({ signedIn, givenName });
     } catch (error) {
       showError(`Error signing into the app: ${error}`);
     }
@@ -82,12 +84,14 @@ class SignInNavItem extends React.Component {
     try {
       await fetch(`${apiEndpoint}/signout`, {
         method: "POST",
+        headers: { "Content-Type": "application/json", "Same-Site": "None" },
       });
       const auth2 = window.gapi.auth2.getAuthInstance();
       await auth2.signOut();
-      this.setState({ user: { signedIn: false, givenName: "" } });
+      const { onUserChange } = this.props;
+      onUserChange({ signedIn: false, givenName: "" });
     } catch (er) {
-      showError(`error signing in ${er}`);
+      showError(`error signing out ${er}`);
     }
   }
 
@@ -102,7 +106,7 @@ class SignInNavItem extends React.Component {
   }
 
   render() {
-    const { user } = this.state;
+    const { user } = this.props;
     const { showing, disabled } = this.state;
     if (user.signedIn) {
       return (
