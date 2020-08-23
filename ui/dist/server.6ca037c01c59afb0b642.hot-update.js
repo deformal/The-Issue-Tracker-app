@@ -153,11 +153,12 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       });
       const auth2 = window.gapi.auth2.getAuthInstance();
       await auth2.signOut();
-      this.setState({
-        user: {
-          signedIn: false,
-          givenName: ""
-        }
+      const {
+        onUserChange
+      } = this.props;
+      onUserChange({
+        signedIn: false,
+        givenName: ""
       });
     } catch (er) {
       showError(`error signing out ${er}`);
@@ -183,7 +184,7 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
   render() {
     const {
       user
-    } = this.state;
+    } = this.props;
     const {
       showing,
       disabled
@@ -227,4 +228,4 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
 /***/ })
 
 };
-//# sourceMappingURL=server.a72d21117b87c309eadd.hot-update.js.map
+//# sourceMappingURL=server.6ca037c01c59afb0b642.hot-update.js.map

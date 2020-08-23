@@ -43,7 +43,7 @@ async function graphQLFetch(query, variables = {}, showError = null) {
     if (result.errors) {
       const error = result.errors[0];
 
-      if (error.extensions.code == "BAD_USER_INPUT") {
+      if (error.extensions.code === "BAD_USER_INPUT") {
         const details = error.extensions.exception.errors.join("\n");
         if (showError) showError(`${error.message}:\n${details}`);
       } else if (showError) {
@@ -62,4 +62,4 @@ async function graphQLFetch(query, variables = {}, showError = null) {
 /***/ })
 
 };
-//# sourceMappingURL=server.481749ccf529cf70e75f.hot-update.js.map
+//# sourceMappingURL=server.44b0ab0ffd7988c4553c.hot-update.js.map

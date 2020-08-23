@@ -126,4 +126,4 @@ class Page extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
 /***/ })
 
 };
-//# sourceMappingURL=server.0e29998ba28e23d641b0.hot-update.js.map
+//# sourceMappingURL=server.4f627cc0e1b70a94ed65.hot-update.js.map

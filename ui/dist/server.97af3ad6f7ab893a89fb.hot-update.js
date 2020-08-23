@@ -111,6 +111,7 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
           "Content-Type": "application/json",
           "Same-Site": "None"
         },
+        credentials: "include",
         body: JSON.stringify({
           google_token: googleToken
         })
@@ -149,7 +150,8 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
         headers: {
           "Content-Type": "application/json",
           "Same-Site": "None"
-        }
+        },
+        credentials: "include"
       });
       const auth2 = window.gapi.auth2.getAuthInstance();
       await auth2.signOut();
@@ -184,7 +186,7 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
   render() {
     const {
       user
-    } = this.state;
+    } = this.props;
     const {
       showing,
       disabled
@@ -228,4 +230,4 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
 /***/ })
 
 };
-//# sourceMappingURL=server.e105dfec24ccf1dad134.hot-update.js.map
+//# sourceMappingURL=server.97af3ad6f7ab893a89fb.hot-update.js.map

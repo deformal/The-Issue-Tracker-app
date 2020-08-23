@@ -26,6 +26,7 @@ async function graphQLFetch(query, variables = {}, showError = null) {
   try {
     const response = await isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(apiEndpoint, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "http://localhost:8000/",
@@ -62,4 +63,4 @@ async function graphQLFetch(query, variables = {}, showError = null) {
 /***/ })
 
 };
-//# sourceMappingURL=server.434096cdde9c4bec2b7f.hot-update.js.map
+//# sourceMappingURL=server.5e6b1e6da27ae49a5ba5.hot-update.js.map

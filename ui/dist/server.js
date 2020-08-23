@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "7a5df4d7571a3f719511";
+/******/ 	var hotCurrentHash = "4374b6fc386441d3de9f";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1100,7 +1100,7 @@ app.use(express__WEBPACK_IMPORTED_MODULE_1___default.a.static("public"), functio
   };
   res.header("Access-Control-Allow-Origin", env); // update to match the domain you will make the request from
 
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept", "Same-Site");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 app.get("/env.js", (req, res) => {
@@ -2867,7 +2867,8 @@ class Page extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   async componentDidMount() {
     const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
     const response = await fetch(`${apiEndpoint}/user`, {
-      method: "POST"
+      method: "POST",
+      credentials: "include"
     });
     const body = await response.text();
     const result = JSON.parse(body);
@@ -3094,6 +3095,7 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
           "Content-Type": "application/json",
           "Same-Site": "None"
         },
+        credentials: "include",
         body: JSON.stringify({
           google_token: googleToken
         })
@@ -3132,7 +3134,8 @@ class SignInNavItem extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
         headers: {
           "Content-Type": "application/json",
           "Same-Site": "None"
-        }
+        },
+        credentials: "include"
       });
       const auth2 = window.gapi.auth2.getAuthInstance();
       await auth2.signOut();
@@ -3397,6 +3400,7 @@ async function graphQLFetch(query, variables = {}, showError = null) {
   try {
     const response = await isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(apiEndpoint, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "http://localhost:8000/",

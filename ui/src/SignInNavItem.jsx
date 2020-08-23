@@ -64,6 +64,7 @@ class SignInNavItem extends React.Component {
       const response = await fetch(`${apiEndpoint}/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Same-Site": "None" },
+        credentials: "include",
         body: JSON.stringify({ google_token: googleToken }),
       });
       const body = await response.text();
@@ -85,6 +86,7 @@ class SignInNavItem extends React.Component {
       await fetch(`${apiEndpoint}/signout`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Same-Site": "None" },
+        credentials: "include",
       });
       const auth2 = window.gapi.auth2.getAuthInstance();
       await auth2.signOut();

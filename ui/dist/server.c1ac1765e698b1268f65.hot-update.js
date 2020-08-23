@@ -85,7 +85,8 @@ class Page extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   async componentDidMount() {
     const apiEndpoint = window.ENV.UI_AUTH_ENDPOINT;
     const response = await fetch(`${apiEndpoint}/user`, {
-      method: "POST"
+      method: "POST",
+      credentials: "include"
     });
     const body = await response.text();
     const result = JSON.parse(body);
@@ -116,31 +117,14 @@ class Page extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       onUserChange: this.onUserChange
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Grid"], {
       fluid: true
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_UserContext_js__WEBPACK_IMPORTED_MODULE_4__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Contents_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Footer, null));
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_UserContext_js__WEBPACK_IMPORTED_MODULE_4__["default"].Provider, {
+      value: user
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Contents_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Footer, null));
   }
 
 }
 
-/***/ }),
-
-/***/ "./src/UserContext.js":
-/*!****************************!*\
-  !*** ./src/UserContext.js ***!
-  \****************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-const UserContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.createContext({
-  signedIn: false
-});
-/* harmony default export */ __webpack_exports__["default"] = (UserContext);
-
 /***/ })
 
 };
-//# sourceMappingURL=server.6ce3cbd67906b8fa5a0f.hot-update.js.map
+//# sourceMappingURL=server.c1ac1765e698b1268f65.hot-update.js.map

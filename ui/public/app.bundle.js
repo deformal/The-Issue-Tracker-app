@@ -5077,13 +5077,7 @@
                         _context.next = 5;
                         return fetch(window.ENV.UI_API_ENDPOINT, {
                           method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin":
-                              "http://localhost:8000/",
-                            "Access-Control-Allow-Headers":
-                              "Origin, X-Requested-With, Content-Type, Accept",
-                          },
+                          credentials: "include",
                           body: JSON.stringify({
                             query: query,
                             variables: variables,
