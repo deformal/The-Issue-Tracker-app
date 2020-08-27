@@ -48,11 +48,6 @@ if (!process.env.UI_AUTH_ENDPOINT) {
 
 app.use(express.static("public"), function (req, res, next) {
   const env = { UI_API_ENDPOINT: process.env.UI_API_ENDPOINT };
-  res.header("Access-Control-Allow-Origin", env); // update to match the domain you will make the request from
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
   next();
 });
 

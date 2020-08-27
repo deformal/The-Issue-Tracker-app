@@ -5,21 +5,22 @@ function jsonDateReviver(key, value) {
   return value;
 }
 
-async function graphQLFetch(query, variables = {}, showError = null) {
+async function graphQLFetch(
+  query,
+  variables = {},
+  showError = null,
+  cookie = null
+) {
   const apiEndpoint = _isBrowser_
     ? window.ENV.UI_API_ENDPOINT
     : process.env.UI_SERVER_API_ENDPOINT;
   try {
+    const headers = { "Content-Type": "application/json" };
+    if (cookie) headers.Cookie = cookie;
     const response = await fetch(apiEndpoint, {
       method: "POST",
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:8000/",
-        "Access-Control-Allow-Headers":
-          "Origin, X-Requested-With, Content-Type, Accept",
-        "Same-Site": "None",
-      },
+      headers,
       body: JSON.stringify({ query, variables }),
     });
     const body = await response.text();

@@ -67,7 +67,7 @@ class IssueList extends React.Component {
             issue(id : $selectedId) @include (if : $hasSelection){id description }
     }`;
 
-    const data = await graphQLFetch(query, vars, showError);
+    const data = await graphQLFetch(query, vars, showError, null);
     return data;
   }
   constructor() {

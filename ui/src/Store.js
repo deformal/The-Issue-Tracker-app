@@ -1,2 +1,2 @@
-const Store = {};
-export default Store;
+const store = {};
+export default store;
