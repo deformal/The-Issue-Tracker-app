@@ -80,6 +80,7 @@ export default class Page extends React.Component {
       signedIn givenName
     }}`;
     const data = await graphQLFetch(query, null, null, cookie);
+    console.log(data);
     return data;
   }
   constructor(props) {
@@ -89,11 +90,16 @@ export default class Page extends React.Component {
     this.state = { user };
     this.onUserChange = this.onUserChange.bind(this);
   }
+
   async componentDidMount() {
-    const { user } = this.state;
-    if (user === null) {
-      const data = await Page.fetchData();
-      this.setState({ user: data.user });
+    try {
+      const { user } = this.state;
+      if (user === null) {
+        const data = await Page.fetchData();
+        this.setState({ user: data.user });
+      }
+    } catch (er) {
+      console.log(er);
     }
   }
   onUserChange(user) {
