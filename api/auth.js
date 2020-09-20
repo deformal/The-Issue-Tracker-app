@@ -21,7 +21,7 @@ if (!JWT_SECRET) {
 const routes = new Router();
 routes.use(bodyParser.json());
 
-const origin = process.env.UI_SERVER_ORIGIN;
+const origin = process.env.UI_SERVER_ORIGIN || 'http:localhost:8000';
 routes.use(cors({ origin, credentials: true }));
 
 function getUser(req) {
@@ -61,7 +61,10 @@ routes.post("/signin", async (req, res) => {
     email,
   };
   const token = jwt.sign(credentials, JWT_SECRET);
-  res.cookie("jwt", token, { httpOnly: true});
+  console.log(token)
+ res.cookie("jwt", token, { httpOnly: true,domain:process.env.COOKIE_DOMAIN})
+   console.log("cookie created")
+
   res.json(credentials);
 });
 
