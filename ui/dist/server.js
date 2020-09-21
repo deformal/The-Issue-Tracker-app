@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "0dd99b14a25f8703510d";
+/******/ 	var hotCurrentHash = "2af94ac7efb5dc6c71b7";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -754,166 +754,14 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./node_modules/webpack/hot/log-apply-result.js":
-/*!*****************************************!*\
-  !*** (webpack)/hot/log-apply-result.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-module.exports = function (updatedModules, renewedModules) {
-  var unacceptedModules = updatedModules.filter(function (moduleId) {
-    return renewedModules && renewedModules.indexOf(moduleId) < 0;
-  });
-
-  var log = __webpack_require__(/*! ./log */ "./node_modules/webpack/hot/log.js");
-
-  if (unacceptedModules.length > 0) {
-    log("warning", "[HMR] The following modules couldn't be hot updated: (They would need a full reload!)");
-    unacceptedModules.forEach(function (moduleId) {
-      log("warning", "[HMR]  - " + moduleId);
-    });
-  }
-
-  if (!renewedModules || renewedModules.length === 0) {
-    log("info", "[HMR] Nothing hot updated.");
-  } else {
-    log("info", "[HMR] Updated modules:");
-    renewedModules.forEach(function (moduleId) {
-      if (typeof moduleId === "string" && moduleId.indexOf("!") !== -1) {
-        var parts = moduleId.split("!");
-        log.groupCollapsed("info", "[HMR]  - " + parts.pop());
-        log("info", "[HMR]  - " + moduleId);
-        log.groupEnd("info");
-      } else {
-        log("info", "[HMR]  - " + moduleId);
-      }
-    });
-    var numberIds = renewedModules.every(function (moduleId) {
-      return typeof moduleId === "number";
-    });
-    if (numberIds) log("info", "[HMR] Consider using the NamedModulesPlugin for module names.");
-  }
-};
-
-/***/ }),
-
-/***/ "./node_modules/webpack/hot/log.js":
-/*!****************************!*\
-  !*** (webpack)/hot/log.js ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var logLevel = "info";
-
-function dummy() {}
-
-function shouldLog(level) {
-  var shouldLog = logLevel === "info" && level === "info" || ["info", "warning"].indexOf(logLevel) >= 0 && level === "warning" || ["info", "warning", "error"].indexOf(logLevel) >= 0 && level === "error";
-  return shouldLog;
-}
-
-function logGroup(logFn) {
-  return function (level, msg) {
-    if (shouldLog(level)) {
-      logFn(msg);
-    }
-  };
-}
-
-module.exports = function (level, msg) {
-  if (shouldLog(level)) {
-    if (level === "info") {
-      console.log(msg);
-    } else if (level === "warning") {
-      console.warn(msg);
-    } else if (level === "error") {
-      console.error(msg);
-    }
-  }
-};
-/* eslint-disable node/no-unsupported-features/node-builtins */
-
-
-var group = console.group || dummy;
-var groupCollapsed = console.groupCollapsed || dummy;
-var groupEnd = console.groupEnd || dummy;
-/* eslint-enable node/no-unsupported-features/node-builtins */
-
-module.exports.group = logGroup(group);
-module.exports.groupCollapsed = logGroup(groupCollapsed);
-module.exports.groupEnd = logGroup(groupEnd);
-
-module.exports.setLogLevel = function (level) {
-  logLevel = level;
-};
-
-module.exports.formatError = function (err) {
-  var message = err.message;
-  var stack = err.stack;
-
-  if (!stack) {
-    return message;
-  } else if (stack.indexOf(message) < 0) {
-    return message + "\n" + stack;
-  } else {
-    return stack;
-  }
-};
-
-/***/ }),
-
 /***/ "./node_modules/webpack/hot/poll.js?1000":
 /*!**********************************!*\
   !*** (webpack)/hot/poll.js?1000 ***!
   \**********************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-/* WEBPACK VAR INJECTION */(function(__resourceQuery) {/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-
-/*globals __resourceQuery */
-if (true) {
-  var hotPollInterval = +__resourceQuery.substr(1) || 10 * 60 * 1000;
-
-  var log = __webpack_require__(/*! ./log */ "./node_modules/webpack/hot/log.js");
-
-  var checkForUpdate = function checkForUpdate(fromUpdate) {
-    if (module.hot.status() === "idle") {
-      module.hot.check(true).then(function (updatedModules) {
-        if (!updatedModules) {
-          if (fromUpdate) log("info", "[HMR] Update applied.");
-          return;
-        }
-
-        __webpack_require__(/*! ./log-apply-result */ "./node_modules/webpack/hot/log-apply-result.js")(updatedModules, updatedModules);
-
-        checkForUpdate(true);
-      }).catch(function (err) {
-        var status = module.hot.status();
-
-        if (["abort", "fail"].indexOf(status) >= 0) {
-          log("warning", "[HMR] Cannot apply update.");
-          log("warning", "[HMR] " + log.formatError(err));
-          log("warning", "[HMR] You need to restart the application!");
-        } else {
-          log("warning", "[HMR] Update failed: " + log.formatError(err));
-        }
-      });
-    }
-  };
-
-  setInterval(checkForUpdate, hotPollInterval);
-} else {}
-/* WEBPACK VAR INJECTION */}.call(this, "?1000"))
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nError: ENOENT: no such file or directory, open 'D:\\WebDev Material\\The-Issue-Tracker-app-master\\ui\\node_modules\\webpack\\hot\\poll.js'");
 
 /***/ }),
 
@@ -1058,7 +906,7 @@ __webpack_require__.r(__webpack_exports__);
 const app = express__WEBPACK_IMPORTED_MODULE_1___default()();
 source_map_support__WEBPACK_IMPORTED_MODULE_3___default.a.install();
 dotenv__WEBPACK_IMPORTED_MODULE_0___default.a.config();
-const port = process.env.UI_SERVER_PORT;
+const port = process.env.PORT || 8000;
 
 const config = __webpack_require__(/*! ../webpack.config.js */ "./webpack.config.js")[0];
 

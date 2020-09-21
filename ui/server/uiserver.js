@@ -6,7 +6,7 @@ import render from "./render.jsx";
 const app = express();
 SourceMapSupport.install();
 dotenv.config();
-const port = process.env.UI_SERVER_PORT;
+const port = process.env.PORT || 8000;
 const config = require("../webpack.config.js")[0];
 const apiProxyTarget = process.env.API_PROXY_TARGET;
 const enableHMR = (process.env.ENABLE_HMR || "true") === "true";
