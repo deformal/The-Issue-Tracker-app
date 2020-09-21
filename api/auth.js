@@ -61,15 +61,12 @@ routes.post("/signin", async (req, res) => {
     email,
   };
   const token = jwt.sign(credentials, JWT_SECRET);
-  console.log(token)
- res.cookie("jwt", token, { httpOnly: true,domain:process.env.COOKIE_DOMAIN})
-   console.log("cookie created")
-
+ res.cookie("jwt", token, { httpOnly: true, path:"/"})
   res.json(credentials);
 });
 
 routes.post("/signout", async (req, res) => {
-  res.clearCookie("jwt");
+  res.clearCookie("jwt",{path:'/'});
   res.json({ status: "ok" });
 });
 

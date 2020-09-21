@@ -11,7 +11,7 @@ app.use("/auth", auth.routes);
 
 installHandler(app);
 
-const port = process.env.API_SERVER_PORT || 2000;
+const port = process.env.PORT || 2000;
 
 (async function () {
   try {

@@ -25,7 +25,7 @@ export default class About extends React.Component {
     const { apiAbout } = this.state;
     return (
       <div className="text-center">
-        <h3>Issue Tracker Version 0.9</h3>
+        <h3>Issue Tracker Version 2.1</h3>
         <h4>{apiAbout}</h4>
       </div>
     );

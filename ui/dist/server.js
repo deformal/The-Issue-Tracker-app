@@ -22,7 +22,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "64b9c82adada2aae8916";
+/******/ 	var hotCurrentHash = "0dd99b14a25f8703510d";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -1184,7 +1184,7 @@ class About extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     } = this.state;
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "text-center"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Issue Tracker Version 0.9"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, apiAbout));
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Issue Tracker Version 2.1"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, apiAbout));
   }
 
 }
