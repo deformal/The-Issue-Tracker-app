@@ -61,7 +61,7 @@ routes.post("/signin", async (req, res) => {
     email,
   };
   const token = jwt.sign(credentials, JWT_SECRET);
- res.cookie("jwt", token, { httpOnly: true, path:"/"})
+ res.cookie("jwt", token, { httpOnly: true})
   res.json(credentials);
 });
 

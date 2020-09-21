@@ -32,7 +32,7 @@ if (apiProxyTarget) {
       changeOrigin: true,
     })
   );
-  app.use("/auth", proxy({ target: apiProxyTarget }));
+  app.use("/auth", proxy({ target: apiProxyTarget,changeOrigin:true }));
 }
 
 if (!process.env.UI_API_ENDPOINT) {
