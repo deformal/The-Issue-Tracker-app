@@ -5,7 +5,8 @@ export default function template(body, initialData, userData) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--react terminologies api-->
-    <title>React App with a server and seperate jsx file</title>
+    <title>IssueTracker</title>
+    <link rel="icon" href="/css/layers.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
     <script src="https://apis.google.com/js/api:client.js"></script>
     <style>
