@@ -64,11 +64,10 @@ function Footer() {
     <small>
       <hr />
       <p className="text-center">
-        Full source code availabe at{"   "}
-        <a href="https://github.com/deformal/The-Issue-Tracker-app">
+        Developed and Designed by {"   "}
+        <a href="http://saurabh-jainwal.herokuapp.com">
           Saurabh Jainwal
         </a>{" "}
-        Github Repository
       </p>
     </small>
   );
