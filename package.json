@@ -1,0 +1,19 @@
+{
+  "name": "the-issue-tracker-app-master",
+  "version": "1.0.0",
+  "description": "Learning from the pro mern stack book",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deformal/The-Issue-Tracker-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/deformal/The-Issue-Tracker-app/issues"
+  },
+  "homepage": "https://github.com/deformal/The-Issue-Tracker-app#readme"
+}
